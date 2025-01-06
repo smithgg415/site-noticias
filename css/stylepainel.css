@@ -1,0 +1,50 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.content-header {
+    margin-bottom: 40px;
+    text-align: center;
+    color: #007bff;
+}
+
+.search-bar {
+    margin: 20px 0;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-responsive {
+    max-height: 400px;
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-warning:hover {
+    background-color: #ec971f;
+}
+
+.btn-danger:hover {
+    background-color: #c9302c;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+@media (max-width: 768px) {
+    .btn-lg {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
