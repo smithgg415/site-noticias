@@ -29,7 +29,7 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/footer.css">
     <style>
-        
+
     </style>
 </head>
 
@@ -84,8 +84,15 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
 
     <div class="container mt-5">
         <div class="hero mb-4">
-            <h1>Bem-vindo ao InfoNews</h1>
+            <h1 style="
+            font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            letter-spacing:5px;
+            background: linear-gradient(to right,  #ffad06,#fff ,#ff105f);
+            background-clip: text; 
+            color: transparent;
+            ">Bem-vindo ao InfoNews</h1>
             <p>Descubra as últimas notícias e fique por dentro de tudo!</p>
+            <p id="dataHora"></p>
         </div>
 
         <div class="news-container">
@@ -172,6 +179,20 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
             <a href="#" style="color: #a8a8ff; text-decoration: none;">Política de Privacidade</a>
         </div>
     </footer>
+    <script>
+        function atualizarDataHora() {
+            var dataHoraAtual = new Date();
+
+            var dataFormatada = dataHoraAtual.toLocaleDateString('pt-BR');
+            var horaFormatada = dataHoraAtual.toLocaleTimeString('pt-BR');
+
+            document.getElementById("dataHora").innerHTML = "Data: " + dataFormatada + " - Hora: " + horaFormatada;
+        }
+
+        setInterval(atualizarDataHora, 1000);
+
+        atualizarDataHora();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Verifique se o usuário está logado
 if (!isset($_SESSION["logado099"]) || $_SESSION['nivel'] !== 'admin') {
     header("Location: index.php");
     exit;
@@ -44,96 +43,33 @@ if ($id > 0) {
         body {
             font-family: 'Arial', sans-serif;
             background: #f4f7fa;
-            margin: 0;
-            padding: 0;
         }
 
         .container {
-            background-color: #ffffff;
+            margin-top: 50px;
+        }
+
+        .form-section {
+            background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 5% auto;
-            padding: 40px;
-            font-size: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 30px;
+        .image-preview {
+            border: 1px dashed #ccc;
+            border-radius: 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            background-color: #f9f9f9;
         }
 
-        label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            color: #495057;
-            margin-bottom: 20px;
-        }
-
-        textarea {
-            min-height: 150px;
-        }
-
-        .input-group i {
-            color: #007bff;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .alert {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-
-        .alert i {
-            margin-right: 10px;
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
         }
 
         .btn-back {
@@ -141,64 +77,64 @@ if ($id > 0) {
             color: white;
             border-radius: 8px;
             padding: 10px 20px;
-            font-size: 1rem;
             text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-            display: inline-block;
         }
 
         .btn-back:hover {
             background-color: #5a6268;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 25px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            button {
-                font-size: 1rem;
-            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Editar Notícia</h1>
+        <div class="row g-3">
+            <!-- Formulário -->
+            <div class="col-lg-6">
+                <div class="form-section">
+                    <h2 class="text-center">Editar Notícia</h2>
+                    <?php if (isset($_SESSION['mensagem'])): ?>
+                        <div class="alert alert-warning">
+                            <?= $_SESSION['mensagem']; ?>
+                        </div>
+                        <?php unset($_SESSION['mensagem']); ?>
+                    <?php endif; ?>
+                    <form method="POST" action="actionnoticia.php">
+                        <input type="hidden" name="acao" value="editar">
+                        <input type="hidden" name="id" value="<?= $id; ?>">
 
-        <?php if (isset($_SESSION['mensagem'])): ?>
-            
-            <?php unset($_SESSION['mensagem']); ?>
-        <?php endif; ?>
+                        <div class="form-group mb-3">
+                            <label for="titulo"><i class="fas fa-heading"></i> Título:</label>
+                            <input type="text" id="titulo" name="titulo" class="form-control" value="<?= htmlspecialchars($noticia['not_titulo']); ?>" required>
+                        </div>
 
-        <form method="POST" action="actionnoticia.php">
-            <input type="hidden" name="acao" value="editar">
-            <input type="hidden" name="id" value="<?= $id; ?>">
+                        <div class="form-group mb-3">
+                            <label for="conteudo"><i class="fas fa-pencil-alt"></i> Conteúdo:</label>
+                            <textarea id="conteudo" name="conteudo" class="form-control" rows="5" required><?= htmlspecialchars($noticia['not_conteudo']); ?></textarea>
+                        </div>
 
-            <div class="form-group">
-                <label for="titulo"><i class="fas fa-heading"></i> Título:</label>
-                <input type="text" id="titulo" name="titulo" class="form-control" value="<?= htmlspecialchars($noticia['not_titulo']); ?>" required>
+                        <div class="form-group mb-3">
+                            <label for="imagem"><i class="fas fa-image"></i> URL da Imagem:</label>
+                            <input type="text" id="imagem" name="imagem" class="form-control" value="<?= htmlspecialchars($noticia['not_imagem']); ?>">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Salvar Alterações</button>
+                        <a href="indexnoticia.php" class="btn btn-secondary w-100"><i class="fas fa-arrow-left"></i> Voltar</a>
+                    </form>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="conteudo"><i class="fas fa-pencil-alt"></i> Conteúdo:</label>
-                <textarea id="conteudo" name="conteudo" class="form-control" required><?= htmlspecialchars($noticia['not_conteudo']); ?></textarea>
+            <!-- Pré-visualização da Imagem -->
+            <div class="col-lg-6">
+                <div class="image-preview">
+                    <?php if (!empty($noticia['not_imagem'])): ?>
+                        <img src="<?= htmlspecialchars($noticia['not_imagem']); ?>" alt="Pré-visualização da imagem">
+                    <?php else: ?>
+                        <span>Nenhuma imagem disponível</span>
+                    <?php endif; ?>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="imagem"><i class="fas fa-image"></i> URL da Imagem:</label>
-                <input type="text" id="imagem" name="imagem" class="form-control" value="<?= htmlspecialchars($noticia['not_imagem']); ?>">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-            <a href="indexnoticia.php" class="btn-back"><i class="fas fa-arrow-left"></i> Voltar</a>
-        </form>
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
