@@ -31,10 +31,10 @@ if (isset($_GET['id'])) {
 
     // Consulta os comentários da notícia
     $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo 
-                       FROM comentarios c 
-                       JOIN usuarios u ON c.usu_codigo = u.usu_codigo 
-                       WHERE c.not_codigo = :not_codigo
-                       ORDER BY c.com_criadoem DESC';
+                    FROM comentarios c 
+                    JOIN usuarios u ON c.usu_codigo = u.usu_codigo 
+                    WHERE c.not_codigo = :not_codigo
+                    ORDER BY c.com_criadoem DESC';
     $stmComentarios = $conexao->prepare($sqlComentarios);
     $stmComentarios->bindValue(':not_codigo', $noticiaId, PDO::PARAM_INT);
     $stmComentarios->execute();
@@ -44,7 +44,6 @@ if (isset($_GET['id'])) {
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -54,84 +53,401 @@ if (isset($_GET['id'])) {
     <title><?= htmlspecialchars($noticia->not_titulo) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="css/styledetails.css">
+    <style>
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .noticia-img {
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .options-menu {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            z-index: 1000;
+            width: 150px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .options-menu button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            text-align: left;
+            background: white;
+            cursor: pointer;
+        }
+
+        .options-menu button:hover {
+            background-color: #f8f9fa;
+        }
+
+        .comment-box textarea {
+            resize: none;
+            border-radius: 5px;
+        }
+
+        .message-container {
+            background: rgba(255, 255, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .noticia-img {
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .comment-box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .comment-box h4 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4B6CC1;
+            margin-bottom: 15px;
+        }
+
+        .comment-box textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: none;
+            font-size: 1rem;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        .comment-box textarea:focus {
+            border-color: #4B6CC1;
+            outline: none;
+            box-shadow: 0 0 5px rgba(75, 108, 193, 0.5);
+        }
+
+        .comment-box button {
+            background-color: #4B6CC1;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .comment-box button:hover {
+            background-color: #354d91;
+            transform: scale(1.05);
+        }
+
+        .comment-box button:active {
+            background-color: #2b3e7d;
+            transform: scale(1);
+        }
+
+        .options-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #6c757d;
+            float: right;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .options-menu {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            z-index: 1000;
+            width: 150px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .options-menu button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            text-align: left;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        .options-menu button:hover {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+
+        .options-menu form {
+            margin: 0;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            justify-content: start;
+        }
+
+        .share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            color: #fff;
+            border-radius: 50%;
+            padding: 12px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Cor de fundo para os ícones */
+        .share-button.facebook {
+            background-color: #3b5998;
+        }
+
+        .share-button.twitter {
+            background-color: #1da1f2;
+        }
+
+        .share-button.whatsapp {
+            background-color: #25d366;
+        }
+
+        /* Efeito de hover */
+        .share-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .share-button i {
+            font-size: 24px;
+            color: white;
+        }
+
+        footer {
+            background-color: #4b2a9b;
+            color: white;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        footer .footer-links div {
+            width: 30%;
+            margin-bottom: 20px;
+        }
+
+        footer .footer-links h5 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        footer .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        footer .footer-social-icons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        footer .footer-social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        footer .footer-social-icons a:hover {
+            color: #a02ae1;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            color: #ddd;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top shadow" style="background-color: #4B6CC1;">
-        <a class="navbar-brand text-white fw-bold" href="#">
-            <i class="bi bi-newspaper"></i> INFONEWS
-        </a>
-        <a href="index.php" class="btn btn-light text-primary">Voltar</a>
-
-    </nav>
-    <div class="container mt-5">
-        <div class="card mb-4">
-            <img src="<?= htmlspecialchars($noticia->not_imagem) ?>" class="img-fluid" alt="<?= htmlspecialchars($noticia->not_titulo) ?>">
-            <div class="card-header">
-                <h1 class="noticia-title"><?= htmlspecialchars($noticia->not_titulo) ?></h1>
-            </div>
-            <div class="card-body">
-                <p><?= nl2br(htmlspecialchars($noticia->not_conteudo)) ?></p>
-            </div>
-            <div class="card-footer">
-                <small>Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?></small>
-            </div>
+    <nav class="navbar navbar-expand-lg shadow" style="
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out;">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold" href="#">
+                <i class="bi bi-newspaper"></i> INFONEWS
+            </a>
+            <a href="index.php" class="btn btn-primary">Voltar</a>
         </div>
+    </nav>
 
-        <div class="comentarios">
-            <?php foreach ($comentarios as $comentario) : ?>
-                <div class="card mb-3 position-relative">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="<?= htmlspecialchars($noticia->not_imagem) ?>" class="img-fluid mb-3 noticia-img" alt="<?= htmlspecialchars($noticia->not_titulo) ?>">
+
+                <?php if ($_SESSION['logado099']) : ?>
+                    <div class="comment-box">
+                        <h4>Adicionar Comentário</h4>
+                        <form method="POST" action="actioncomentario.php">
+                            <input type="hidden" name="acao" value="incluir">
+                            <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
+                            <textarea name="conteudo" rows="4" required placeholder="Digite seu comentário..." class="form-control"></textarea>
+                            <button type="submit" class="btn mt-3">Comentar</button>
+                        </form>
+                    </div>
+                    <h3 style="
+                    text-align: left;margin-top:10px;
+                    font-family:Verdana, Geneva, Tahoma, sans-serif
+                    ">Compartilhe essa notícia!</h>
+                        <div class="share-buttons">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode('https://infonews/detalhesnoticias?id=' . $noticia->not_codigo) ?>" target="_blank" class="share-button facebook" title="Compartilhar no Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://api.whatsapp.com/send?text=<?= urlencode($noticia->not_titulo . ' ' . 'https://infonews/detalhesnoticias?id=' . $noticia->not_codigo) ?>" target="_blank" class="share-button whatsapp" title="Compartilhar no WhatsApp">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+                        </div>
+
+                    <?php else : ?>
+                        <div class="text-center mt-4">
+                            <a href="login.php" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Faça login para comentar
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
+            </div>
+
+
+            <!-- Coluna da direita -->
+            <div class="col-md-6">
+                <!-- Título e conteúdo -->
+                <h1 class="mb-4"><?= htmlspecialchars($noticia->not_titulo) ?></h1>
+                <div class="card mb-4">
                     <div class="card-body">
-                        <p><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>: <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?></p>
-                        <small class="text-muted">Publicado em <?= date('d/m/Y H:i', strtotime($comentario->com_criadoem)) ?></small>
-
-                        <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
-                            <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
-                            <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
-                                <form method="POST" action="actioncomentario.php" style="margin: 0;">
-                                    <input type="hidden" name="acao" value="editar">
-                                    <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
-                                    <button type="button" onclick="editComment(<?= $comentario->com_codigo ?>)">Editar</button>
-                                </form>
-                                <form method="POST" action="actioncomentario.php" style="margin: 0;">
-                                    <input type="hidden" name="acao" value="excluir">
-                                    <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
-                                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este comentário?')">Excluir</button>
-                                </form>
-                            </div>
-                        <?php endif; ?>
+                        <p><?= nl2br(htmlspecialchars($noticia->not_conteudo)) ?></p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?>
                     </div>
                 </div>
-            <?php endforeach; ?>
+
+                <!-- Comentários -->
+                <h4 class="mb-3">Comentários</h4>
+                <?php foreach ($comentarios as $comentario) : ?>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>: <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?></p>
+                            <small class="text-muted">Publicado em <?= date('d/m/Y H:i', strtotime($comentario->com_criadoem)) ?></small>
+
+                            <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
+                                <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
+                                <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
+                                    <form method="POST" action="actioncomentario.php" style="margin: 0;">
+                                        <input type="hidden" name="acao" value="editar">
+                                        <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
+                                        <button type="button" onclick="editComment(<?= $comentario->com_codigo ?>)">Editar</button>
+                                    </form>
+                                    <form method="POST" action="actioncomentario.php" style="margin: 0;">
+                                        <input type="hidden" name="acao" value="excluir">
+                                        <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
+                                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este comentário?')">Excluir</button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+
+                <?php if (count($comentarios) == 0) : ?>
+                    <p class="text-muted">Ainda não há comentários nesta notícia.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container footer-links">
+            <div>
+                <h5>Sobre nós</h5>
+                <p>Somos uma plataforma de notícias dedicados a trazer o melhor conteúdo de forma clara e objetiva.</p>
+            </div>
+            <div>
+                <h5>Contato</h5>
+                <p>Email: contato@infonews.com.br</p>
+                <p>Telefone: (11) 1234-5678</p>
+            </div>
+            <div>
+                <h5>Links úteis</h5>
+                <a href="#">Política de Privacidade</a>
+                <a href="#">Termos de Serviço</a>
+                <a href="#">FAQ</a>
+            </div>
         </div>
 
-        <?php if (count($comentarios) == 0) : ?>
-            <p class="text-muted">Ainda não há comentários nesta notícia.</p>
-        <?php endif; ?>
+        <div class="footer-social-icons">
+            <a href="https://www.facebook.com" target="_blank" class="bi bi-facebook"></a>
+            <a href="https://twitter.com" target="_blank" class="bi bi-twitter"></a>
+            <a href="https://www.instagram.com" target="_blank" class="bi bi-instagram"></a>
+        </div>
 
-        <?php if ($_SESSION['logado099']) : ?>
-            <div class="comment-box">
-                <h4>Adicionar Comentário</h4>
-                <form method="POST" action="actioncomentario.php">
-                    <input type="hidden" name="acao" value="incluir">
-                    <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
-                    <textarea name="conteudo" rows="4" required placeholder="Digite seu comentário..." class="form-control"></textarea>
-                    <button type="submit" class="mt-3">Enviar Comentário</button>
-                </form>
-            </div>
-        <?php else : ?>
-            <div class="message-container">
-                <a href="login.php" class="login-link"><i class="bi bi-box-arrow-in-right icon"></i> <b>Faça login</b> para comentar.</a>
-            </div>
-        <?php endif; ?>
-    </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 INFONEWS. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 
     <script>
         function toggleOptionsMenu(id) {
             const menu = document.getElementById(`options-menu-${id}`);
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
+
 
         function editComment(id) {
             window.location.href = 'editarcomentario.php?com_codigo=' + id;
