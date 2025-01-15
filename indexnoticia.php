@@ -53,6 +53,17 @@ if (!empty($searchTerm)) {
 }
 $stmNoticias->execute();
 $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
+$sql = 'SELECT * FROM anuncios';
+if (!empty($searchTerm)) {
+    $sql .= ' WHERE anu_nome LIKE :search';
+}
+$sql .= ' ORDER BY anu_nome';
+$stm = $conexao->prepare($sql);
+if (!empty($searchTerm)) {
+    $stm->bindValue(':search', '%' . $searchTerm . '%');
+}
+$stm->execute();
+$anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -68,7 +79,6 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-    <?php include_once "header.php"; ?>
 
     <div class="container mt-5">
         <div class="content-header">
@@ -86,7 +96,7 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="row g-4">
             <!-- Administradores -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4">Administradores</h3>
@@ -133,9 +143,57 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Usuários</h3>
+                        <a href="register.php" class="btn btn-success btn-lg d-block mb-3">
+                            <i class="bi bi-person-plus me-2"></i>Adicionar Usuário
+                        </a>
 
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (count($usuarios) > 0): ?>
+                                        <?php foreach ($usuarios as $usuario): ?>
+                                            <tr>
+                                                <td><?= $usuario['usu_codigo'] ?></td>
+                                                <td><?= htmlspecialchars($usuario['usu_nome']) ?></td>
+                                                <td><?= htmlspecialchars($usuario['usu_email']) ?></td>
+                                                <td>
+                                                    <a href="editarusuario.php?id=<?= $usuario['usu_codigo']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <form action="actionusuario.php" method="POST" style="display: inline-block;">
+                                                        <input type="hidden" name="acao" value="excluir">
+                                                        <input type="hidden" name="id" value="<?= $usuario['usu_codigo']; ?>">
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center">Nenhum usuário encontrado.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="btn text-light mt-4 text-center bg-success">Quantidade de usuários cadastrados
+                            <b><?= count($usuarios) ?></b>
+                        </p>
+                    </div>
+                </div>
+            </div>
             <!-- Notícias -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4">Notícias</h3>
@@ -182,14 +240,12 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </div>
-
-            <!-- Usuários -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm">
+            <div class="col-lg-3">
+                <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title text-center mb-4">Usuários</h3>
-                        <a href="register.php" class="btn btn-success btn-lg d-block mb-3">
-                            <i class="bi bi-person-plus me-2"></i>Adicionar Usuário
+                        <h3 class="card-title text-center mb-4">Anúncio</h3>
+                        <a href="addanuncio.php" class="btn btn-success btn-lg d-block mb-3">
+                            <i class="bi bi-file-earmark-plus me-2"></i>Adicionar anúncio
                         </a>
 
                         <div class="table-responsive">
@@ -198,38 +254,34 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
                                     <tr>
                                         <th>ID</th>
                                         <th>Nome</th>
-                                        <th>Email</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (count($usuarios) > 0): ?>
-                                        <?php foreach ($usuarios as $usuario): ?>
+                                    <?php if (count($anuncios) > 0): ?>
+                                        <?php foreach ($anuncios as $anuncio): ?>
                                             <tr>
-                                                <td><?= $usuario['usu_codigo'] ?></td>
-                                                <td><?= htmlspecialchars($usuario['usu_nome']) ?></td>
-                                                <td><?= htmlspecialchars($usuario['usu_email']) ?></td>
-                                                <td >
-                                                    <a href="editarusuario.php?id=<?= $usuario['usu_codigo']; ?>" class="btn btn-warning btn-sm">Editar</a>
-                                                    <form action="actionusuario.php" method="POST" style="display: inline-block;">
+                                                <td><?= $anuncio['anu_codigo'] ?></td>
+                                                <td><?= htmlspecialchars($anuncio['anu_nome']) ?></td>
+                                                <td>
+                                                    <a href="editaranuncio.php?id=<?= $anuncio['anu_codigo']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                    <form action="actionanuncio.php" method="POST" style="display: inline-block;">
                                                         <input type="hidden" name="acao" value="excluir">
-                                                        <input type="hidden" name="id" value="<?= $usuario['usu_codigo']; ?>">
-                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</button>
+                                                        <input type="hidden" name="id" value="<?= $anuncio['anu_codigo']; ?>">
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este anúncio?')">Excluir</button>
                                                     </form>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="4" class="text-center">Nenhum usuário encontrado.</td>
+                                            <td colspan="4" class="text-center">Nenhum anúncio encontrado.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
-                        <p class="btn text-light mt-4 text-center bg-success">Quantidade de usuários cadastrados
-                            <b><?= count($usuarios) ?></b>
-                        </p>
+                        <p class="btn text-light mt-4 text-center bg-success">Quantidade de anúncios cadastrados <b><?= count($anuncios) ?></b></p>
                     </div>
                 </div>
             </div>

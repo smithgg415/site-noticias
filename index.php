@@ -15,6 +15,10 @@ $sqlNoticias = 'SELECT * FROM noticias ORDER BY not_publicado_em DESC';
 $stmNoticias = $conexao->prepare($sqlNoticias);
 $stmNoticias->execute();
 $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
+$sql = 'SELECT * FROM anuncios ORDER BY anu_codigo DESC';
+$stm = $conexao->prepare($sql);
+$stm->execute();
+$anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
 ?>
 
 <!DOCTYPE html>
@@ -407,9 +411,14 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
         .click-to-more {
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease-in-out;
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
         }
-        .last-published{
-            background-color: #007bff;
+
+        .last-published {
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
             color: white;
             padding: 5px;
             border-radius: 5px;
@@ -417,7 +426,180 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
             top: 20px;
             right: 20px;
         }
+
+        .btn-login {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.8s linear;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-login i {
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-login:hover i {
+            transform: translateX(5px);
+        }
+
+        .btn-controle {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #28A745, #218838);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-controle i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-controle:hover {
+            background: linear-gradient(45deg, #218838, #1E7E34);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-controle:hover i {
+            transform: rotate(20deg);
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-home i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: #f8f9fa;
+        }
+
+        .btn-home:hover i {
+            transform: scale(1.2);
+        }
+
+        .btn-account {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-account i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-account:hover {
+            background: linear-gradient(45deg, #003580, #0056b3);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: #f8f9fa;
+        }
+
+        .btn-account:hover i {
+            transform: scale(1.2);
+        }
+
+        .btn-account:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-item {
+            margin: 5px;
+        }
+
+        .carousel-inner {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .titulo-noticias {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 2.5rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            text-align: center;
+        }
+
+        .titulo-noticias::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            border-radius: 2px;
+        }
+
+        .titulo-noticias {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
     </style>
+
 </head>
 
 <body>
@@ -433,31 +615,31 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
                 <ul class="navbar-nav ms-auto align-items-center">
                     <?php if ($_SESSION['nivel'] === "admin") : ?>
                         <li class="nav-item">
-                            <a href="indexnoticia.php" class="nav-link text-white">
+                            <a href="indexnoticia.php" class="btn-controle">
                                 <i class="bi bi-tools"></i> Controle
                             </a>
                         </li>
                     <?php else : ?>
                         <li class="nav-item">
-                            <a href="index.php" class="nav-link text-white">
+                            <a href="index.php" class="btn-home">
                                 <i class="bi bi-house-door"></i> Home
                             </a>
                         </li>
                     <?php endif; ?>
                     <?php if ($_SESSION['logado099']) : ?>
                         <li class="nav-item">
-                            <a href="perfil.php" class="nav-link text-white">
+                            <a href="perfil.php" class="btn-account">
                                 <i class="bi bi-person"></i> Conta
                             </a>
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
                         <?php if ($_SESSION['logado099']) : ?>
-                            <a href="logout.php" class="btn btn-sm ms-2">
+                            <a href="logout.php" class="btn-login">
                                 <i class="bi bi-box-arrow-right"></i> Sair
                             </a>
                         <?php else : ?>
-                            <a href="login.php" class="btn btn-sm text-light ms-2">
+                            <a href="login.php" class="btn-login">
                                 <i class="bi bi-box-arrow-in-right"></i> Login
                             </a>
                         <?php endif; ?>
@@ -466,6 +648,8 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
             </div>
         </div>
     </nav>
+
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-7">
@@ -505,7 +689,7 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
                                 height: 220px;
                                 border-top-left-radius: 15px;
                                 border-top-right-radius: 15px;
-                                border-bottom: 3px solid #007bff;
+                                border-bottom: 1px solid #007bff;
                                 transition: transform 0.3s ease-in-out;">
                                     <div class="click-to-more">
                                         Clique para mais
@@ -522,42 +706,64 @@ $noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
             </div>
         </div>
     </div>
+    <div class="container mt-4" id="anuncios">
+        <div id="anuncioCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+            <div class="carousel-inner">
+                <?php foreach ($anuncios as $index => $anuncio) : ?>
+                    <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                        <img src="<?= $anuncio->anu_imagem ?>" class="d-block w-100" alt="Anúncio" style="object-fit: cover; height: 300px;">
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#anuncioCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#anuncioCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Próximo</span>
+            </button> -->
+        </div>
+    </div>
 
+    <h2 class="titulo-noticias">Últimas notícias:</h2>
 
     <div class="container mt-5">
         <div class="news-container">
             <?php foreach ($noticias as $noticia) : ?>
                 <div class="news-card">
-                    <img src="<?= $noticia->not_imagem ?>" alt="">
-                    <div class="card-body">
-                        <h5 class="card-title"><?= htmlspecialchars($noticia->not_titulo) ?></h5>
-                        <p class="card-text"><?= substr(htmlspecialchars($noticia->not_conteudo), 0, 100) ?>...</p>
-                        <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" class="btn btn-primary">Leia Mais</a>
-                    </div>
-                    <div class="card-footer">
-                        <small>Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?></small>
-                    </div>
+                    <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" style="text-decoration:none;">
+                        <img src="<?= $noticia->not_imagem ?>" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title"><?= htmlspecialchars($noticia->not_titulo) ?></h5>
+                            <p class="card-text"><?= substr(htmlspecialchars($noticia->not_conteudo), 0, 100) ?>...</p>
+                            <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" class="btn btn-primary">Leia Mais</a>
+                        </div>
+                        <div class="card-footer">
+                            <small>Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?></small>
+                        </div>
 
-                    <div class="card-footer mt-3">
-                        <?php if ($_SESSION['logado099']) : ?>
-                            <button class="btn-comentario btn-success" data-bs-toggle="collapse" data-bs-target="#comentarios<?= $noticia->not_codigo ?>">Comentar</button>
-                            <div class="collapse" id="comentarios<?= $noticia->not_codigo ?>">
-                                <form action="actioncomentario.php" method="POST">
-                                    <input type="hidden" name="acao" value="incluir">
-                                    <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
-                                    <textarea class="form-control mt-2" name="conteudo" rows="3" placeholder="Escreva seu comentário..."></textarea>
-                                    <button type="submit" class="btn btn-success mt-2"><i class='bi-send'> </i>Enviar</button>
-                                </form>
-                            </div>
-                        <?php else : ?>
-                            <div class="message-container">
-                                <a href="login.php" class="login-link"><i class="bi bi-box-arrow-in-right icon"></i> <b>Faça login</b> para comentar.</a>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                        <div class="card-footer mt-3">
+                            <?php if ($_SESSION['logado099']) : ?>
+                                <button class="btn-comentario btn-success" data-bs-toggle="collapse" data-bs-target="#comentarios<?= $noticia->not_codigo ?>">Comentar</button>
+                                <div class="collapse" id="comentarios<?= $noticia->not_codigo ?>">
+                                    <form action="actioncomentario.php" method="POST">
+                                        <input type="hidden" name="acao" value="incluir">
+                                        <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
+                                        <textarea class="form-control mt-2" name="conteudo" rows="3" placeholder="Escreva seu comentário..."></textarea>
+                                        <button type="submit" class="btn btn-success mt-2"><i class='bi-send'> </i>Enviar</button>
+                                    </form>
+                                </div>
+                            <?php else : ?>
+                                <div class="message-container">
+                                    <a href="login.php" class="login-link"><i class="bi bi-box-arrow-in-right icon"></i> <b>Faça login</b> para comentar.</a>
+                                </div>
+                            <?php endif; ?>
+                    </a>
                 </div>
-            <?php endforeach; ?>
         </div>
+    <?php endforeach; ?>
+    </div>
     </div>
 
     <footer>

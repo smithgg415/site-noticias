@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06/01/2025 às 17:26
+-- Tempo de geração: 15/01/2025 às 22:45
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -18,8 +18,30 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `blog`
+-- Banco de dados: `noticia`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `anuncios`
+--
+
+CREATE TABLE `anuncios` (
+  `anu_codigo` int(11) NOT NULL,
+  `anu_imagem` varchar(255) NOT NULL,
+  `anu_linkacesso` varchar(255) NOT NULL,
+  `anu_nome` varchar(150) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `anuncios`
+--
+
+INSERT INTO `anuncios` (`anu_codigo`, `anu_imagem`, `anu_linkacesso`, `anu_nome`) VALUES
+(2, 'https://www.portalbueno.com.br/uploads/images/2023/12/oftalmologoa-castilho.gif', 'https://oftalmocastro.com.br/', 'OftalmoCastro'),
+(3, 'https://www.portalbueno.com.br/uploads/images/2024/11/andorinha12802825832988388520.jfif', 'https://api.whatsapp.com/send/?phone=551821044111&text=ANDORINHA&type=phone_number&app_absent=0', 'Andorinha Viagens'),
+(4, 'https://www.portalbueno.com.br/uploads/images/2024/11/img-8564.gif', 'https://api.whatsapp.com/send/?phone=5518991055885&text=TRINUS&type=phone_number&app_absent=0', 'Trinus Odontologia');
 
 -- --------------------------------------------------------
 
@@ -34,30 +56,6 @@ CREATE TABLE `comentarios` (
   `com_conteudo` text NOT NULL,
   `com_criadoem` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `comentarios`
---
-
-INSERT INTO `comentarios` (`com_codigo`, `usu_codigo`, `not_codigo`, `com_conteudo`, `com_criadoem`) VALUES
-(31, 9, 2, 'Muito triste', '2024-12-29 00:03:24'),
-(36, 9, 2, 'qual o tempo que esse gordo fez?', '2024-12-29 15:11:58'),
-(37, 9, 9, 'muito triste', '2024-12-29 16:11:05'),
-(38, 9, 9, 'parabéns', '2024-12-29 16:15:49'),
-(42, 9, 9, 'oioioi', '2024-12-29 16:49:48'),
-(43, 9, 9, 'Bem feito', '2024-12-29 17:11:54'),
-(44, 12, 8, 'belo boi, feia piscina', '2024-12-29 17:43:05'),
-(45, 12, 8, 'se fudeu', '2024-12-29 17:43:26'),
-(47, 9, 8, 'tadinho', '2024-12-29 17:57:18'),
-(49, 27, 9, 'vai trouxa', '2025-01-03 22:17:21'),
-(50, 9, 8, 'Parabéns', '2025-01-03 23:19:36'),
-(51, 9, 9, 'Quando isso?', '2025-01-03 23:28:25'),
-(53, 9, 9, 'Morreu', '2025-01-03 23:33:14'),
-(55, 10, 22, 'App Muito Bom!', '2025-01-05 20:31:46'),
-(56, 10, 22, 'Qual foi a empresa que desenvolveu?', '2025-01-05 20:34:31'),
-(57, 9, 22, 'Gostei do app', '2025-01-05 20:35:05'),
-(59, 9, 22, 'Beach tennis é esporte de viado', '2025-01-06 02:12:21'),
-(60, 9, 22, 'vai porra', '2025-01-06 03:30:31');
 
 -- --------------------------------------------------------
 
@@ -94,8 +92,7 @@ INSERT INTO `noticias` (`not_codigo`, `not_titulo`, `not_conteudo`, `not_autor_c
 (18, 'Como a Sustentabilidade Está Moldando o Mercado Imobiliário', 'O mercado imobiliário tem passado por uma grande transformação nos últimos anos, com uma crescente demanda por imóveis sustentáveis. De edifícios de baixo consumo de energia até soluções ecológicas para construção, os consumidores estão cada vez mais preocupados com o impacto ambiental das suas escolhas. Arquitetos e construtoras estão investindo em tecnologias verdes e práticas sustentáveis para reduzir a pegada de carbono e aumentar a eficiência energética dos imóveis.', 9, '2025-01-05 19:57:24', '2025-01-04 00:04:16', '2025-01-05 20:22:10', 'https://f1ciaimobiliaria.com.br/wp-content/uploads/2024/08/Tendencias-de-Sustentabilidade-no-Mercado-Imobiliario-de-Florianopolis-2-1024x683.jpg'),
 (19, 'Tecnologia 5G Chega ao Brasil: O Futuro da Conectividade', 'A chegada do 5G no Brasil promete transformar a forma como nos conectamos e interagimos com o mundo. Com uma velocidade de internet significativamente mais alta, o 5G permitirá uma experiência mais fluida para navegar, jogar online e até para aplicações de realidade aumentada. As cidades brasileiras começam a receber a infraestrutura necessária para a nova tecnologia, o que abre portas para novos negócios e avanços em áreas como saúde, educação e transporte.', 9, '2025-01-05 19:56:52', '2025-01-04 00:04:16', '2025-01-05 20:21:57', 'https://embarcados.com.br/wp-content/uploads/2022/10/imagem-de-destaque-27-850x510.png'),
 (20, 'Explorando Novos Destinos Turísticos no Brasil', 'O Brasil, conhecido por suas praias paradisíacas e grandes centros urbanos, está se destacando também como destino para turistas que buscam experiências únicas em suas viagens. Cidades como Bonito (MS), Alter do Chão (PA) e Lençóis Maranhenses (MA) estão ganhando destaque no mercado turístico internacional. Além da natureza exuberante, esses destinos oferecem uma imersão cultural rica, além de atividades de ecoturismo que atraem viajantes de todo o mundo.', 9, '2025-01-05 19:58:06', '2025-01-04 00:04:16', '2025-01-05 20:22:19', 'https://magazine.zarpo.com.br/wp-content/uploads/2018/09/25-pontos-turisticos-do-brasil-para-conhecer-agora-mesmo-2.jpg'),
-(21, 'Giacomelli Dev\'s leva Prêmio como Melhor desenvolvedora de Software da região de Pres. Prudente', 'No último fim de semana, a Giacomelli Dev\'s, uma das empresas mais inovadoras da área de tecnologia, foi premiada como a Melhor Desenvolvedora de Software da região de Presidente Prudente. A cerimônia de premiação aconteceu durante o evento “Tech Awards 2025”, que reuniu as principais empresas e profissionais da indústria de TI.\r\n\r\nA Giacomelli Dev\'s, especializada no desenvolvimento de soluções personalizadas de software para empresas de diversos setores, foi reconhecida pela sua excelência em inovação, qualidade de atendimento e impacto no mercado local. \"Este prêmio é o resultado do esforço contínuo da nossa equipe em proporcionar soluções tecnológicas que realmente fazem a diferença para nossos clientes\", afirmou Luís Felipe Giacomelli Rodrigues, CEO e Fundador da empresa.', 9, '2025-01-05 20:11:22', '2025-01-05 20:11:22', '2025-01-05 20:14:41', 'https://nutriflow.netlify.app/logos/giacomellilogo.png'),
-(22, 'Lançamento do app BeachDuo é feito em Piquerobi', 'A partir de agora, os amantes de beach tennis têm uma nova maneira de se conectar e melhorar suas experiências na praia! O BeachDuo, aplicativo inovador desenvolvido especialmente para a comunidade do esporte, chega ao mercado para transformar a maneira como os jogadores encontram parceiros, marcam partidas e acompanham seu desempenho.\r\n\r\nCom uma interface amigável e funcionalidades inteligentes, o BeachDuo permite que os usuários criem perfis personalizados, busquem parceiros de jogo com base em nível técnico, localização e disponibilidade, e agendem partidas diretamente pelo app. Além disso, a plataforma oferece recursos para registrar estatísticas de jogos, competições, e até mesmo resultados, facilitando o acompanhamento da evolução de cada jogador.', 9, '2025-01-05 20:17:44', '2025-01-05 20:17:44', '2025-01-06 01:41:33', 'https://sportlife.com.br/wp-content/uploads/2023/05/Beach-Tennis.jpg');
+(21, 'Giacomelli Dev\'s leva Prêmio como Melhor desenvolvedora de Software da região de Pres. Prudente', 'No último fim de semana, a Giacomelli Dev\'s, uma das empresas mais inovadoras da área de tecnologia, foi premiada como a Melhor Desenvolvedora de Software da região de Presidente Prudente. A cerimônia de premiação aconteceu durante o evento “Tech Awards 2025”, que reuniu as principais empresas e profissionais da indústria de TI.\r\n\r\nA Giacomelli Dev\'s, especializada no desenvolvimento de soluções personalizadas de software para empresas de diversos setores, foi reconhecida pela sua excelência em inovação, qualidade de atendimento e impacto no mercado local. \"Este prêmio é o resultado do esforço contínuo da nossa equipe em proporcionar soluções tecnológicas que realmente fazem a diferença para nossos clientes\", afirmou Luís Felipe Giacomelli Rodrigues, CEO e Fundador da empresa.', 9, '2025-01-05 20:11:22', '2025-01-05 20:11:22', '2025-01-05 20:14:41', 'https://nutriflow.netlify.app/logos/giacomellilogo.png');
 
 -- --------------------------------------------------------
 
@@ -140,6 +137,12 @@ INSERT INTO `usuarios` (`usu_codigo`, `usu_nome`, `usu_email`, `usu_senha`, `cre
 --
 
 --
+-- Índices de tabela `anuncios`
+--
+ALTER TABLE `anuncios`
+  ADD PRIMARY KEY (`anu_codigo`);
+
+--
 -- Índices de tabela `comentarios`
 --
 ALTER TABLE `comentarios`
@@ -166,10 +169,16 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de tabela `anuncios`
+--
+ALTER TABLE `anuncios`
+  MODIFY `anu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de tabela `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `com_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `com_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de tabela `noticias`
