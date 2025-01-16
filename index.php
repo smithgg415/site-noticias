@@ -30,6 +30,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <title>Painel de Notícias</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="website icon" href="img/logoinfonews.jpg" type="png">
     <link rel="stylesheet" href="css/footer.css">
     <style>
         body {
@@ -558,17 +559,29 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             margin: 5px;
         }
 
-        .carousel-inner {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        #anuncioCarousel img {
+            width: 100%;
+            height: auto;
             max-height: 300px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-inner {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-inner img {
             object-fit: cover;
         }
 
-        .card-img-top {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
+        @media (max-width: 768px) {
+            #anuncioCarousel img {
+                max-height: 200px;
+            }
         }
+
 
         .titulo-noticias {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -711,7 +724,10 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             <div class="carousel-inner">
                 <?php foreach ($anuncios as $index => $anuncio) : ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= $anuncio->anu_imagem ?>" class="d-block w-100" alt="Anúncio" style="object-fit: cover; height: 300px;">
+                        <img src="<?= $anuncio->anu_imagem ?>"
+                            class="d-block w-100"
+                            alt="Anúncio"
+                            style="object-fit: cover; height: auto; max-height: 300px;">
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -725,6 +741,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             </button> -->
         </div>
     </div>
+
 
     <h2 class="titulo-noticias">Últimas notícias:</h2>
 
@@ -808,10 +825,15 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                     <li><a href="#">Twitter</a></li>
                 </ul>
             </div>
+
+            <div class="logo-infonews justify-content-center">
+                <img src="img/logoinfonews.jpg" alt="Logo InfoNews" width="150" height="150">
+                <img src="https://nutriflow.netlify.app/logos/giacomellilogo.png" alt="" height="150" width="150" width="150">
+            </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2020 InfoNews Ltda. Todos os direitos reservados.</p>
+            <p>&copy; 2025 InfoNews Ltda. Todos os direitos reservados.</p>
             <a href="#" style="color: #a8a8ff; text-decoration: none;">Política de Privacidade</a>
         </div>
     </footer>

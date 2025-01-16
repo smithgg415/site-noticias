@@ -29,12 +29,11 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Consulta os comentários da notícia
     $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo 
                     FROM comentarios c 
                     JOIN usuarios u ON c.usu_codigo = u.usu_codigo 
                     WHERE c.not_codigo = :not_codigo
-                    ORDER BY c.com_criadoem DESC';
+                    ORDER BY c.com_criadoem DESC LIMIT 4';
     $stmComentarios = $conexao->prepare($sqlComentarios);
     $stmComentarios->bindValue(':not_codigo', $noticiaId, PDO::PARAM_INT);
     $stmComentarios->execute();
@@ -256,7 +255,7 @@ if (isset($_GET['id'])) {
         footer {
             background-color: #4b2a9b;
             color: white;
-            padding: 40px 0;
+            padding: 40px 20px;
             margin-top: 40px;
         }
 
@@ -264,10 +263,12 @@ if (isset($_GET['id'])) {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
         footer .footer-links div {
-            width: 30%;
+            flex: 1;
+            min-width: 200px;
             margin-bottom: 20px;
         }
 
@@ -283,16 +284,19 @@ if (isset($_GET['id'])) {
             font-size: 1rem;
             display: block;
             margin-bottom: 10px;
+            transition: color 0.3s ease;
         }
 
         footer .footer-links a:hover {
             text-decoration: underline;
+            color: #a02ae1;
         }
 
         footer .footer-social-icons {
             display: flex;
             gap: 20px;
             justify-content: center;
+            margin-top: 20px;
         }
 
         footer .footer-social-icons a {
@@ -311,6 +315,74 @@ if (isset($_GET['id'])) {
             margin-top: 20px;
             color: #ddd;
         }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            footer .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            footer .footer-links div {
+                text-align: center;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            footer .footer-links h5 {
+                font-size: 1rem;
+            }
+
+            footer .footer-links a {
+                font-size: 0.9rem;
+            }
+
+            footer .footer-social-icons a {
+                font-size: 1.2rem;
+            }
+
+            .footer-bottom {
+                font-size: 0.8rem;
+            }
+        }
+
+        .text-muted {
+            color: #6c757d;
+
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            p {
+                font-size: 1.7rem;
+            }
+
+            .text-muted {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 0.8rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 
@@ -327,66 +399,64 @@ if (isset($_GET['id'])) {
         </div>
     </nav>
 
-    <div class="container mt-5">
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <img src="<?= htmlspecialchars($noticia->not_imagem) ?>" alt="<?= htmlspecialchars($noticia->not_titulo) ?>" class="img-fluid noticia-img">
+            </div>
+            <div class="col-md-8">
+                <div class="card shadow-sm border-light mb-4">
+                    <div class="card-body">
+                        <h1 class="display-4 display-sm-5 display-xs-6 font-weight-bold text-dark"><?= htmlspecialchars($noticia->not_titulo) ?></h1>
+                        <p class="lead text-muted"><?= nl2br(htmlspecialchars($noticia->not_conteudo)) ?></p>
+                        <div class="text-right text-muted">
+                            <small>Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <div class="row">
             <div class="col-md-6">
-                <img src="<?= htmlspecialchars($noticia->not_imagem) ?>" class="img-fluid mb-3 noticia-img" alt="<?= htmlspecialchars($noticia->not_titulo) ?>">
-
+                <h3 style="
+                    text-align: left;margin-top:10px;
+                    font-family:Verdana, Geneva, Tahoma, sans-serif
+                    ">Compartilhe essa notícia!</h3>
+                <div class="share-buttons mb-4">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode('https://infonews/detalhesnoticias?id=' . $noticia->not_codigo) ?>" target="_blank" class="share-button facebook" title="Compartilhar no Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="https://api.whatsapp.com/send?text=<?= urlencode($noticia->not_titulo . ' ' . 'https://infonews/detalhesnoticias?id=' . $noticia->not_codigo) ?>" target="_blank" class="share-button whatsapp" title="Compartilhar no WhatsApp">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+                </div>
                 <?php if ($_SESSION['logado099']) : ?>
                     <div class="comment-box">
                         <h4>Adicionar Comentário</h4>
                         <form method="POST" action="actioncomentario.php">
                             <input type="hidden" name="acao" value="incluir">
                             <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
-                            <textarea name="conteudo" rows="4" required placeholder="Digite seu comentário..." class="form-control"></textarea>
-                            <button type="submit" class="btn mt-3">Comentar</button>
+                            <textarea name="conteudo" required placeholder="Digite seu comentário..."></textarea>
+                            <button type="submit" class="btn btn-primary mt-3">Comentar</button>
                         </form>
                     </div>
-                    <h3 style="
-                    text-align: left;margin-top:10px;
-                    font-family:Verdana, Geneva, Tahoma, sans-serif
-                    ">Compartilhe essa notícia!</h>
-                        <div class="share-buttons">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode('https://infonews/detalhesnoticias?id=' . $noticia->not_codigo) ?>" target="_blank" class="share-button facebook" title="Compartilhar no Facebook">
-                                <i class="bi bi-facebook"></i>
-                            </a>
-                            <a href="https://api.whatsapp.com/send?text=<?= urlencode($noticia->not_titulo . ' ' . 'https://infonews/detalhesnoticias?id=' . $noticia->not_codigo) ?>" target="_blank" class="share-button whatsapp" title="Compartilhar no WhatsApp">
-                                <i class="bi bi-whatsapp"></i>
-                            </a>
-                        </div>
-
-                    <?php else : ?>
-                        <div class="text-center mt-4">
-                            <a href="login.php" class="btn btn-outline-primary">
-                                <i class="bi bi-box-arrow-in-right"></i> Faça login para comentar
-                            </a>
-                        </div>
-                    <?php endif; ?>
-
+                <?php else : ?>
+                    <div class="alert alert-info">
+                        <a href="login.php" class="btn btn-outline-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Faça login para comentar
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
-
-
-            <!-- Coluna da direita -->
-            <div class="col-md-6">
-                <!-- Título e conteúdo -->
-                <h1 class="mb-4"><?= htmlspecialchars($noticia->not_titulo) ?></h1>
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <p><?= nl2br(htmlspecialchars($noticia->not_conteudo)) ?></p>
-                    </div>
-                    <div class="card-footer text-muted">
-                        Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?>
-                    </div>
-                </div>
-
-                <!-- Comentários -->
-                <h4 class="mb-3">Comentários</h4>
+            <div class="col-md-6 comments-container">
+                <h4 class="m-2">Comentários</h4>
                 <?php foreach ($comentarios as $comentario) : ?>
-                    <div class="card mb-3">
+                    <div class="card mb-2">
                         <div class="card-body">
                             <p><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>: <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?></p>
                             <small class="text-muted">Publicado em <?= date('d/m/Y H:i', strtotime($comentario->com_criadoem)) ?></small>
-
                             <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
                                 <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
                                 <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
@@ -404,6 +474,9 @@ if (isset($_GET['id'])) {
                             <?php endif; ?>
                         </div>
                     </div>
+                    <?php if ($comentarios > 4) : ?>
+                        <a class="text-muted" href="comentarios.php?id=<?= $noticia->not_codigo ?>">Ver todos os comentários</a>
+                    <?php endif; ?>
                 <?php endforeach; ?>
 
                 <?php if (count($comentarios) == 0) : ?>
@@ -416,7 +489,7 @@ if (isset($_GET['id'])) {
         <div class="container footer-links">
             <div>
                 <h5>Sobre nós</h5>
-                <p>Somos uma plataforma de notícias dedicados a trazer o melhor conteúdo de forma clara e objetiva.</p>
+                <p>Somos uma plataforma de notícias dedicada a trazer o melhor conteúdo de forma clara e objetiva.</p>
             </div>
             <div>
                 <h5>Contato</h5>
@@ -441,6 +514,7 @@ if (isset($_GET['id'])) {
             <p>&copy; 2025 INFONEWS. Todos os direitos reservados.</p>
         </div>
     </footer>
+
 
     <script>
         function toggleOptionsMenu(id) {
