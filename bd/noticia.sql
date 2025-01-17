@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 15/01/2025 às 22:45
+-- Tempo de geração: 17/01/2025 às 23:17
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -57,6 +57,15 @@ CREATE TABLE `comentarios` (
   `com_criadoem` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `comentarios`
+--
+
+INSERT INTO `comentarios` (`com_codigo`, `usu_codigo`, `not_codigo`, `com_conteudo`, `com_criadoem`) VALUES
+(84, 9, 12, 'muito foda!', '2025-01-17 07:51:58'),
+(85, 9, 9, 'Muito lindo de se ver!', '2025-01-17 19:00:51'),
+(86, 29, 9, 'parabens', '2025-01-17 21:33:55');
+
 -- --------------------------------------------------------
 
 --
@@ -91,8 +100,7 @@ INSERT INTO `noticias` (`not_codigo`, `not_titulo`, `not_conteudo`, `not_autor_c
 (17, 'Como a Inteligência Artificial Está Revolucionando a Educação', 'A inteligência artificial (IA) tem se mostrado uma ferramenta poderosa no campo da educação, criando soluções personalizadas para alunos de todas as idades. Plataformas baseadas em IA podem analisar o progresso de cada aluno e sugerir materiais de estudo específicos, ajudando a otimizar o aprendizado. Além disso, a IA está facilitando a criação de experiências interativas e práticas, como assistentes virtuais, que podem responder perguntas em tempo real e melhorar o engajamento dos estudantes.', 9, '2025-01-05 19:59:51', '2025-01-04 00:04:16', '2025-01-05 20:21:48', 'https://colegiosantaedwiges.com.br/blog/wp-content/uploads/2024/03/blog-foto-2.jpg'),
 (18, 'Como a Sustentabilidade Está Moldando o Mercado Imobiliário', 'O mercado imobiliário tem passado por uma grande transformação nos últimos anos, com uma crescente demanda por imóveis sustentáveis. De edifícios de baixo consumo de energia até soluções ecológicas para construção, os consumidores estão cada vez mais preocupados com o impacto ambiental das suas escolhas. Arquitetos e construtoras estão investindo em tecnologias verdes e práticas sustentáveis para reduzir a pegada de carbono e aumentar a eficiência energética dos imóveis.', 9, '2025-01-05 19:57:24', '2025-01-04 00:04:16', '2025-01-05 20:22:10', 'https://f1ciaimobiliaria.com.br/wp-content/uploads/2024/08/Tendencias-de-Sustentabilidade-no-Mercado-Imobiliario-de-Florianopolis-2-1024x683.jpg'),
 (19, 'Tecnologia 5G Chega ao Brasil: O Futuro da Conectividade', 'A chegada do 5G no Brasil promete transformar a forma como nos conectamos e interagimos com o mundo. Com uma velocidade de internet significativamente mais alta, o 5G permitirá uma experiência mais fluida para navegar, jogar online e até para aplicações de realidade aumentada. As cidades brasileiras começam a receber a infraestrutura necessária para a nova tecnologia, o que abre portas para novos negócios e avanços em áreas como saúde, educação e transporte.', 9, '2025-01-05 19:56:52', '2025-01-04 00:04:16', '2025-01-05 20:21:57', 'https://embarcados.com.br/wp-content/uploads/2022/10/imagem-de-destaque-27-850x510.png'),
-(20, 'Explorando Novos Destinos Turísticos no Brasil', 'O Brasil, conhecido por suas praias paradisíacas e grandes centros urbanos, está se destacando também como destino para turistas que buscam experiências únicas em suas viagens. Cidades como Bonito (MS), Alter do Chão (PA) e Lençóis Maranhenses (MA) estão ganhando destaque no mercado turístico internacional. Além da natureza exuberante, esses destinos oferecem uma imersão cultural rica, além de atividades de ecoturismo que atraem viajantes de todo o mundo.', 9, '2025-01-05 19:58:06', '2025-01-04 00:04:16', '2025-01-05 20:22:19', 'https://magazine.zarpo.com.br/wp-content/uploads/2018/09/25-pontos-turisticos-do-brasil-para-conhecer-agora-mesmo-2.jpg'),
-(21, 'Giacomelli Dev\'s leva Prêmio como Melhor desenvolvedora de Software da região de Pres. Prudente', 'No último fim de semana, a Giacomelli Dev\'s, uma das empresas mais inovadoras da área de tecnologia, foi premiada como a Melhor Desenvolvedora de Software da região de Presidente Prudente. A cerimônia de premiação aconteceu durante o evento “Tech Awards 2025”, que reuniu as principais empresas e profissionais da indústria de TI.\r\n\r\nA Giacomelli Dev\'s, especializada no desenvolvimento de soluções personalizadas de software para empresas de diversos setores, foi reconhecida pela sua excelência em inovação, qualidade de atendimento e impacto no mercado local. \"Este prêmio é o resultado do esforço contínuo da nossa equipe em proporcionar soluções tecnológicas que realmente fazem a diferença para nossos clientes\", afirmou Luís Felipe Giacomelli Rodrigues, CEO e Fundador da empresa.', 9, '2025-01-05 20:11:22', '2025-01-05 20:11:22', '2025-01-05 20:14:41', 'https://nutriflow.netlify.app/logos/giacomellilogo.png');
+(20, 'Explorando Novos Destinos Turísticos no Brasil', 'O Brasil, conhecido por suas praias paradisíacas e grandes centros urbanos, está se destacando também como destino para turistas que buscam experiências únicas em suas viagens. Cidades como Bonito (MS), Alter do Chão (PA) e Lençóis Maranhenses (MA) estão ganhando destaque no mercado turístico internacional. Além da natureza exuberante, esses destinos oferecem uma imersão cultural rica, além de atividades de ecoturismo que atraem viajantes de todo o mundo.', 9, '2025-01-05 19:58:06', '2025-01-04 00:04:16', '2025-01-05 20:22:19', 'https://magazine.zarpo.com.br/wp-content/uploads/2018/09/25-pontos-turisticos-do-brasil-para-conhecer-agora-mesmo-2.jpg');
 
 -- --------------------------------------------------------
 
@@ -115,22 +123,24 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`usu_codigo`, `usu_nome`, `usu_email`, `usu_senha`, `created_at`, `updated_at`, `usu_nivel`) VALUES
-(9, 'Luís Felipe Giacomelli Rodrigues', 'lfgiacomellirodrigues@gmail.com', '$2y$10$OWD2sFPrOi.Vs2p4ylxdcu5Bn2T.rrCSJe3UXQtujFmFUnJ6HHFJa', '2024-12-05 00:54:17', '2025-01-03 22:18:56', 'admin'),
-(10, 'Ana Paula de Oliveira Giacomelli', 'paulagiacomelli28@hotmail.com', '$2y$10$rMUeFYRZkplozqPiARqz1OzzlJeWbf0/IsYh3DFRz0MXejvHZGtMS', '2024-12-05 01:44:15', '2024-12-29 15:23:22', 'usuario'),
-(11, 'Ana paula de oliveira giacomelli', 'paulagiacomelli@hotmail.com', '$2y$10$CKv.uFMD5qE1keBe/sfD.eZNAnjFxqLc.IW5QfeKWYkzfz4q6EWdO', '2024-12-05 02:04:45', '2025-01-03 03:46:16', 'admin'),
-(12, 'Fernando', 'luisfernandomachadorodrigues4@gmail.com', '$2y$10$xKGwmOGgGQaY9x9.4rEi0.1YwPXFo36rPPJcqHRVeWiTk9Fi56ndG', '2024-12-05 02:06:28', '2025-01-03 23:20:31', 'usuario'),
-(13, 'João Silva', 'joao.silva@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(14, 'Maria Oliveira', 'maria.oliveira@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(15, 'Pedro Santos', 'pedro.santos@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(16, 'Ana Costa', 'ana.costa@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(17, 'Lucas Almeida', 'lucas.almeida@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(18, 'Fernanda Lima', 'fernanda.lima@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(19, 'Bruno Pereira', 'bruno.pereira@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(20, 'Carla Rocha', 'carla.rocha@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(21, 'Rafael Mendes', 'rafael.mendes@email.com', 'senha123', '2024-12-30 02:26:49', '2024-12-30 02:26:49', 'usuario'),
-(22, 'Juliana Ferreira', 'juliana.ferreira@email.com', '$2y$10$j4I0GapCSbd0cZumq.4gJ.8FgfKMeVfYL1f2rDqtg25Bzu4KhDfIy', '2024-12-30 02:26:49', '2025-01-03 03:42:24', 'admin'),
-(26, 'smith', 'pedo@gmail.com', '$2y$10$bR0b83aCsymqJ6Wq0p8Kce8qxFN4IzQRmIf6bNOCFExJEnZdDDMuG', '2025-01-03 03:58:04', '2025-01-03 03:58:04', 'usuario'),
-(27, 'smith', 'smith@email.com', '$2y$10$9goqsIzIKvY4KBQXOYEBxuqbrRcdH4rI6CpYmfnhoxd5ZHqIIOmBC', '2025-01-03 22:17:01', '2025-01-03 22:18:27', 'admin');
+(9, 'Luís Felipe Giacomelli Rodrigues', 'lfgiacomellirodrigues@gmail.com', '$2y$10$IB4ZjF8udOHS15Zwoou9NOq.A2cIuxEARLBqFhv9YgiK7pbalZ7UO', '2024-12-05 00:54:17', '2025-01-17 22:08:40', 'admin'),
+(11, 'Ana paula de oliveira giacomelli', 'paulagiacomelli@hotmail.com', '$2y$10$CKv.uFMD5qE1keBe/sfD.eZNAnjFxqLc.IW5QfeKWYkzfz4q6EWdO', '2024-12-05 02:04:45', '2025-01-17 00:41:44', 'admin'),
+(12, 'Fernando', 'luisfernandomachadorodrigues4@gmail.com', '$2y$10$xKGwmOGgGQaY9x9.4rEi0.1YwPXFo36rPPJcqHRVeWiTk9Fi56ndG', '2024-12-05 02:06:28', '2025-01-17 21:28:42', 'usuário'),
+(13, 'João Silva', 'joao.silva@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(14, 'Maria Oliveira', 'maria.oliveira@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(15, 'Pedro Santos', 'pedro.santos@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(16, 'Ana Costa', 'ana.costa@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(17, 'Lucas Almeida', 'lucas.almeida@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(18, 'Fernanda Lima', 'fernanda.lima@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(19, 'Bruno Pereira', 'bruno.pereira@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(20, 'Carla Rocha', 'carla.rocha@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(21, 'Rafael Mendes', 'rafael.mendes@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário'),
+(22, 'Juliana Ferreira', 'juliana.ferreira@email.com', '$2y$10$j4I0GapCSbd0cZumq.4gJ.8FgfKMeVfYL1f2rDqtg25Bzu4KhDfIy', '2024-12-30 02:26:49', '2025-01-17 00:41:44', 'admin'),
+(26, 'smith', 'pedo@gmail.com', '$2y$10$bR0b83aCsymqJ6Wq0p8Kce8qxFN4IzQRmIf6bNOCFExJEnZdDDMuG', '2025-01-03 03:58:04', '2025-01-17 21:28:42', 'usuário'),
+(27, 'Pedro Álvares Cabral', 'smith@email.com', '$2y$10$VZaoDfMxqdSsplMVPXGICOr/3hOCd8XbL7Gy/PPbjuI3NiO/oOtAm', '2025-01-03 22:17:01', '2025-01-17 06:18:04', 'admin'),
+(28, 'Luís Felipe Giacomelli Rodrigues', 'emailteste@email.com', '$2y$10$K1bbs5RNkkkuzTS/9XSHD.i/q5oyP8aXjfcgtGn5vZT6FEtd2mM.O', '2025-01-17 07:31:06', '2025-01-17 21:28:42', 'usuário'),
+(29, 'Paula giacomelli', 'paula@email.com', '$2y$10$fk1TB7q7fLt3J1RZZT2MUOReQGMLtylkwPBrHz452dXDz67wTfw6.', '2025-01-17 21:32:58', '2025-01-17 21:53:00', 'admin'),
+(30, 'Ana Paula de Oliveira Giacomelli', 'paula1@gmail.com', '$2y$10$N/9yQAvjYeKuzOioyGny7ehO4/8RyWRqLz6UpPC2XKTWinuYMS2r6', '2025-01-17 21:56:21', '2025-01-17 21:56:55', 'admin');
 
 --
 -- Índices para tabelas despejadas
@@ -178,7 +188,7 @@ ALTER TABLE `anuncios`
 -- AUTO_INCREMENT de tabela `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `com_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `com_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT de tabela `noticias`
@@ -190,7 +200,7 @@ ALTER TABLE `noticias`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `usu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `usu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Restrições para tabelas despejadas
