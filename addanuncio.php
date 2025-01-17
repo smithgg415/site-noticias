@@ -31,6 +31,8 @@
 </head>
 
 <body class="bg-light">
+    <?php include 'header.php'; ?>
+
     <div class="container-fluid py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-12">
@@ -94,6 +96,7 @@
             </div>
         </div>
     </div>
+    <?php include 'footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

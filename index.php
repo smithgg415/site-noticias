@@ -32,9 +32,169 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="website icon" href="img/logoinfonews.jpg" type="png">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/style.css">
     <style>
-        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            padding-top: 70px;
+            margin: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            transform: scale(1.05);
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .btn-sm {
+            font-size: 0.875rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            background-color: #007bff;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-sm:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+
+
+        @keyframes gradiente-animado {
+            0% {
+                background-position-x: 0%;
+            }
+
+            100% {
+                background-position-x: 100%;
+            }
+        }
+
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 0 20px;
+            margin-bottom: 50px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease-in-out;
+            transform: translateY(0);
+        }
+
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 3px solid #007bff;
+        }
+
+        .news-card .card-body {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .news-card .card-footer {
+            padding: 10px 20px;
+            background: #f7f7f7;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .news-card .btn {
+            display: block;
+            margin: 10px auto 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border-radius: 30px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .news-card .btn-comentario {
+            display: block;
+            margin: 10px auto 0;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: white;
+            border-radius: 10px;
+            color: #007bff;
+            border: 1px solid #007bff;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .news-card .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+
+        .message-container {
+            text-align: center;
+            background-color: rgba(255, 255, 0, 0.4);
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-link {
+            color: #000;
+            text-decoration: none;
+        }
+
         <?php
         $sqlNoticia = 'SELECT not_imagem FROM noticias ORDER BY not_publicado_em DESC LIMIT 1';
         $stmNoticia = $conexao->prepare($sqlNoticia);
@@ -84,6 +244,377 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             padding-left: 20px;
             padding-bottom: 20px;
             animation: slideInLeft 0.8s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .last-news {
+                margin-top: 55px;
+                margin-left: 0;
+                height: 500px;
+                animation: slideInLeft 0.7s ease-out;
+            }
+        }
+
+        .last-news::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .last-news h1 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            z-index: 1;
+            transition: transform 0.3s ease, color 0.3s ease;
+            margin: 0;
+            position: relative;
+        }
+
+        .last-news h1::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.7s ease-out;
+        }
+
+        .last-news:hover {
+            transform: scale(1.05);
+        }
+
+        .last-news:hover h1 {
+            transform: translateY(-10px);
+        }
+
+        .last-news:hover::before {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .last-news:hover h1::after {
+            width: 100%;
+        }
+
+        .last-news h2 {
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .last-news img {
+            border-radius: 15px;
+        }
+
+        .square-news {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 0 20px;
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .square-news {
+                padding: 0 15px;
+                animation: slideInRight 0.8s ease-out;
+            }
+        }
+
+        .news-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .card-text:hover {
+            color: #007bff;
+        }
+
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .news-card:hover .card-title {
+            color: #007bff;
+        }
+
+        .news-card .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+            text-align: center;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .news-card .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .news-card .click-to-more {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #007bff;
+            color: white;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .news-card .click-to-more:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .news-card img {
+                height: 180px;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        .click-to-more {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease-in-out;
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+        }
+
+        .last-published {
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+
+        .btn-login {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.8s linear;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-login i {
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-login:hover i {
+            transform: translateX(5px);
+        }
+
+        .btn-controle {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #28A745, #218838);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-controle i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-controle:hover {
+            background: linear-gradient(45deg, #218838, #1E7E34);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-controle:hover i {
+            transform: rotate(20deg);
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-home i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: #f8f9fa;
+        }
+
+        .btn-home:hover i {
+            transform: scale(1.2);
+        }
+
+        .btn-account {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #0056b3, #1C75FF);
+
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-account i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-account:hover {
+            background: linear-gradient(45deg, #003580, #0056b3);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: #f8f9fa;
+        }
+
+        .btn-account:hover i {
+            transform: scale(1.2);
+        }
+
+        .btn-account:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-item {
+            margin: 5px;
+        }
+
+        .titulo-noticias {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 2.5rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            text-align: center;
+        }
+
+        .titulo-noticias::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            border-radius: 2px;
+        }
+
+        .titulo-noticias {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
     </style>
 
@@ -140,15 +671,16 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-7">
-                <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" style="text-decoration:none;">
+                <?php
+                $sqlUltimaNoticia = 'SELECT * FROM noticias ORDER BY not_publicado_em DESC LIMIT 1';
+                $stmUltimaNoticia = $conexao->prepare($sqlUltimaNoticia);
+                $stmUltimaNoticia->execute();
+                $ultimaNoticia = $stmUltimaNoticia->fetch(PDO::FETCH_OBJ);
+                $ultimaNoticiaCodigo = $ultimaNoticia->not_codigo;
+                ?>
+                <a href="detalhesnoticias.php?id=<?= $ultimaNoticia->not_codigo ?>" style="text-decoration:none;">
                     <div class="last-news">
-                        <?php
-                        $sqlUltimaNoticia = 'SELECT * FROM noticias ORDER BY not_publicado_em DESC LIMIT 1';
-                        $stmUltimaNoticia = $conexao->prepare($sqlUltimaNoticia);
-                        $stmUltimaNoticia->execute();
-                        $ultimaNoticia = $stmUltimaNoticia->fetch(PDO::FETCH_OBJ);
-                        $ultimaNoticiaCodigo = $ultimaNoticia->not_codigo;
-                        ?>
+
                         <h1><?= $ultimaNoticia->not_titulo ?></h1>
 
                         <div class="last-published">
@@ -193,30 +725,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             </div>
         </div>
     </div>
-    <div class="container mt-4" id="anuncios">
-        <div id="anuncioCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
-            <div class="carousel-inner">
-                <?php foreach ($anuncios as $index => $anuncio) : ?>
-                    <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= $anuncio->anu_imagem ?>"
-                            class="d-block w-100"
-                            alt="Anúncio"
-                            style="object-fit: cover; height: auto; max-height: 300px;">
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <!-- <button class="carousel-control-prev" type="button" data-bs-target="#anuncioCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#anuncioCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Próximo</span>
-            </button> -->
-        </div>
-    </div>
-
-
+    <?php include "carrossel_anuncios.php"; ?>
     <h2 class="titulo-noticias">Últimas notícias:</h2>
 
     <div class="container mt-5">
@@ -286,6 +795,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             <div class="footer-section">
                 <h3>Suporte</h3>
                 <ul>
+                    <li><a href="perfil.php?openModal=true&tab=screen2">Políticas e Diretrizes</a></li>
                     <li><a href="#">Solicitação de Suporte</a></li>
                     <li><a href="#">Contato</a></li>
                 </ul>
@@ -294,7 +804,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             <div class="footer-section">
                 <h3>Siga-nos</h3>
                 <ul>
-                    <li><a href="#">Facebook</a></li>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">Twitter</a></li>
                 </ul>
@@ -302,7 +811,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
 
             <div class="logo-infonews justify-content-center">
                 <img src="img/logoinfonews.jpg" alt="Logo InfoNews" width="150" height="150">
-                <img src="https://nutriflow.netlify.app/logos/giacomellilogo.png" alt="" height="150" width="150" width="150">
+                <img src="img/giacomellidevslogo.png" alt="" height="150" width="150" width="150">
             </div>
         </div>
 

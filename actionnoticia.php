@@ -60,7 +60,7 @@ if ($acao == 'editar') {
     $retorno = $stm->execute();
 
     if ($retorno) {
-        $_SESSION['mensagem'] = 'Notícia editada com sucesso!';
+        $_SESSION['mensagem'] = '';
         header('Location: indexnoticia.php');
         exit;
     } else {

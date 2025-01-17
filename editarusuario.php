@@ -19,6 +19,7 @@ if (!$usuario) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -47,19 +48,25 @@ if (!$usuario) {
         .ad-section {
             position: relative;
         }
+
+        .card-header {
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+        }
     </style>
 </head>
+
 <body class="bg-light">
+    <?php include 'header.php'; ?>
+
     <div class="container-fluid py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-12">
                 <div class="card shadow-lg border-0">
-                    <div class="card-header bg-success text-white text-center">
+                    <div class="card-header text-white text-center">
                         <h1 class="h3">Editar Usuário</h1>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <!-- Formulário à esquerda -->
                             <div class="col-lg-6 col-md-6">
                                 <form action="actionusuario.php" method="post">
                                     <input type="hidden" name="id" value="<?= htmlspecialchars($usuario['usu_codigo']) ?>">
@@ -80,19 +87,24 @@ if (!$usuario) {
                                             <i class="fas fa-lock me-2"></i>Senha
                                         </label>
                                         <input type="password" class="form-control" id="senha" name="senha" value="<?= htmlspecialchars($usuario['usu_senha']) ?>" required>
+                                        <small class="text-muted">Sua senha está criptografada!</small>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="nivel" class="form-label">
-                                            <i class="fas fa-users-cog me-2"></i>Nível
-                                        </label>
-                                        <select class="form-select" id="nivel" name="nivel" required>
-                                            <option value="admin" <?= $usuario['usu_nivel'] == 'admin' ? 'selected' : '' ?>>Admin</option>
-                                            <option value="usuario" <?= $usuario['usu_nivel'] == 'usuario' ? 'selected' : '' ?>>Usuário</option>
-                                        </select>
-                                    </div>
+                                    <?php if ($_SESSION['nivel'] == 'admin') { ?>
+                                        <div class="mb-3">
+                                            <label for="nivel" class="form-label">
+                                                <i class="fas fa-users-cog me-2"></i>Nível
+                                            </label>
+                                            <select class="form-select" id="nivel" name="nivel" required>
+                                                <option value="admin" <?= $usuario['usu_nivel'] == 'admin' ? 'selected' : '' ?>>Admin</option>
+                                                <option value="usuario" <?= $usuario['usu_nivel'] == 'usuario' ? 'selected' : '' ?>>Usuário</option>
+                                            </select>
+                                        </div>
+                                    <?php } else {
+                                        echo '<input type="hidden" name="nivel" value="usuario">';
+                                    } ?>
                                     <div class="d-flex justify-content-between">
                                         <input type="hidden" name="acao" value="editar">
-                                        <button type="submit" class="btn btn-success">
+                                        <button type="submit" class="btn card-header text-light">
                                             <i class="fas fa-save me-2"></i>Salvar
                                         </button>
                                         <a href="indexnoticia.php" class="btn btn-danger">
@@ -101,7 +113,7 @@ if (!$usuario) {
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+                            <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center mt-3">
                                 <div class="ad-section border rounded p-4 w-100 text-center bg-light" id="adSection">
                                     <button class="close-button" onclick="fecharAnuncio()">
                                         <i class="fas fa-times"></i>
@@ -121,12 +133,14 @@ if (!$usuario) {
             </div>
         </div>
     </div>
+    <?php include 'footer.php'; ?>
     <script>
-       function fecharAnuncio() {
+        function fecharAnuncio() {
             var adSection = document.getElementById("adSection");
             adSection.style.display = "none";
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -54,6 +54,9 @@ if (!empty($searchTerm)) {
 $stmNoticias->execute();
 $noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
 $sql = 'SELECT * FROM anuncios';
+$stm = $conexao->prepare($sql);
+$stm->execute();
+$anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
 if (!empty($searchTerm)) {
     $sql .= ' WHERE anu_nome LIKE :search';
 }
@@ -63,7 +66,7 @@ if (!empty($searchTerm)) {
     $stm->bindValue(':search', '%' . $searchTerm . '%');
 }
 $stm->execute();
-$anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -73,23 +76,80 @@ $anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/stylepainel.css">
+    <style>
+        #painel {
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            padding: 40px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        #painel h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #painel p {
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 30px 15px;
+            }
+
+            .container-fluid h1 {
+                font-size: 2rem;
+            }
+
+            .container-fluid p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container-fluid {
+                padding: 25px 10px;
+            }
+
+            .container-fluid h1 {
+                font-size: 1.8rem;
+            }
+
+            .container-fluid p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
+<?php include 'header.php'; ?>
 
     <div class="container-fluid">
-        <div class="container-fluid" id="painel">
-            <h1 class="mb-3">Painel Administrativo</h1>
-            <p class="lead">Gerencie os administradores, usuários e notícias de forma eficiente</p>
+        <div class="container-fluid mt-1" id="painel">
+            <h1 class="mb-3">Painel Administrativo <i class="bi bi-gear"></i>
+            </h1>
+            <p class="lead">Tenha controle total nas notícias, anúncios e usuários! <i class="bi bi-emoji-smile"></i>
+            </p>
         </div>
 
         <div class="search-bar">
             <form action="" method="POST" class="d-flex justify-content-center">
-                <input type="text" name="search" class="form-control w-50" placeholder="Buscar Notícias ou Usuários" value="<?= htmlspecialchars($searchTerm) ?>">
-                <button type="submit" class="btn btn-primary ms-2"><i class='bi-search'></i></button>
+                <input type="text" name="search" class="form-control w-50" placeholder="Buscar Notícias, Anúncios ou Usuários" value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="btn btn-primary ms-2 mr-3"><i class='bi-search'></i></button>
+
                 <a href="index.php" class="btn btn-secondary ms-2">Home <i class='bi-house'></i></a>
             </form>
         </div>
@@ -203,7 +263,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                 </div>
-                <!-- Notícias -->
+                <?php include "carrossel_anuncios.php"; ?>
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
@@ -256,7 +316,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="card-title text-center mb-4">Anúncio</h3>
+                            <h3 class="card-title text-center mb-4">Anúncios</h3>
                             <a href="addanuncio.php" class="btn btn-success btn-lg d-block mb-3">
                                 <i class="bi bi-file-earmark-plus me-2"></i>Adicionar anúncio
                             </a>
@@ -274,13 +334,13 @@ $anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
                                         <?php if (count($anuncios) > 0): ?>
                                             <?php foreach ($anuncios as $anuncio): ?>
                                                 <tr>
-                                                    <td><?= $anuncio['anu_codigo'] ?></td>
-                                                    <td><?= htmlspecialchars($anuncio['anu_nome']) ?></td>
+                                                    <td><?= $anuncio->anu_codigo ?></td>
+                                                    <td><?= htmlspecialchars($anuncio->anu_nome) ?></td>
                                                     <td>
-                                                        <a href="editaranuncio.php?id=<?= $anuncio['anu_codigo']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                        <a href="editaranuncio.php?id=<?= $anuncio->anu_codigo; ?>" class="btn btn-warning btn-sm">Editar</a>
                                                         <form action="actionanuncio.php" method="POST" style="display: inline-block;">
                                                             <input type="hidden" name="acao" value="excluir">
-                                                            <input type="hidden" name="id" value="<?= $anuncio['anu_codigo']; ?>">
+                                                            <input type="hidden" name="id" value="<?= $anuncio->anu_codigo; ?>">
                                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este anúncio?')">Excluir</button>
                                                         </form>
                                                     </td>
@@ -301,9 +361,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
-    <footer class="text-center mt-5">
-        <p>© 2025 Painel Administrativo. Todos os direitos reservados.</p>
-    </footer>
+    <?php include 'footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

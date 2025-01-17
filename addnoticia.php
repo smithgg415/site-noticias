@@ -31,6 +31,8 @@
 </head>
 
 <body class="bg-light">
+<?php include 'header.php'; ?>
+
     <div class="container-fluid py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-12">
@@ -103,6 +105,7 @@
             </div>
         </div>
     </div>
+    <?php include 'footer.php'; ?>
     <script>
         function atualizarDataHora() {
             var dataHoraAtual = new Date();

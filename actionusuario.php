@@ -144,7 +144,7 @@
             echo "<meta http-equiv='refresh' content='0;URL=index.php'>";
         else:
             echo "<div class='alert alert-danger' role='alert'>Erro ao excluir conta!</div>";
-            echo "<meta http-equiFv='refresh' content='2;URL=index.php'>";
+            echo "<meta http-equiv='refresh' content='2;URL=index.php'>";
         endif;
 
     endif;

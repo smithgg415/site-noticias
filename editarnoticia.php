@@ -87,9 +87,9 @@ if ($id > 0) {
 </head>
 
 <body>
+    <?php include 'header.php'; ?>
     <div class="container">
         <div class="row g-3">
-            <!-- Formulário -->
             <div class="col-lg-6">
                 <div class="form-section">
                     <h2 class="text-center">Editar Notícia</h2>
@@ -136,7 +136,7 @@ if ($id > 0) {
             </div>
         </div>
     </div>
-
+    <?php include 'footer.php'; ?>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

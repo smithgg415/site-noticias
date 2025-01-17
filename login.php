@@ -2,11 +2,14 @@
 
 require 'bd/conexao.php';
 $conexao = conexao::getInstance();
+$login_err = ""; // Inicializando a variável de erro
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $senha = trim($_POST['senha']);
 
     if (!empty($email) && !empty($senha)) {
+        // Prepara a consulta para pegar os dados do usuário
         $sql = "SELECT * FROM usuarios WHERE usu_email = :email";
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(':email', $email);
@@ -18,26 +21,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $hashed_password = $row['usu_senha'];
                 $nivel = $row['usu_nivel'];
 
+                // Verificando se a senha inserida corresponde ao hash
                 if (password_verify($senha, $hashed_password)) {
+                    // Inicia a sessão e armazena os dados do usuário
                     session_start();
                     $_SESSION['logado099'] = true;
                     $_SESSION['id'] = $id;
                     $_SESSION['nome'] = $row['usu_nome'];
                     $_SESSION['nivel'] = $nivel;
 
+                    // Redireciona para a página principal
                     header("Location: index.php");
                     exit;
                 } else {
-                    $login_err = "Email ou senha incorretos.";
+                    $login_err = "Email ou senha incorretos."; // Erro ao verificar senha
                 }
             } else {
-                $login_err = "Email ou senha incorretos.";
+                $login_err = "Email ou senha incorretos."; // Caso o email não seja encontrado
             }
         } else {
-            $login_err = "Ops! Algo deu errado. Por favor, tente novamente mais tarde.";
+            $login_err = "Ops! Algo deu errado. Por favor, tente novamente mais tarde."; // Erro ao executar consulta
         }
     } else {
-        $login_err = "Por favor, preencha todos os campos.";
+        $login_err = "Por favor, preencha todos os campos."; // Erro caso algum campo esteja vazio
     }
 }
 
@@ -50,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <!-- Adicionando link para os ícones do Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
@@ -96,14 +101,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 0.5rem;
             color: #555;
         }
+
         input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 1.5rem;
             border: 1px solid #ccc;
             border-radius: 5px;
-            border-end-end-radius: 0;
-            border-top-right-radius: 0;
             font-size: 1rem;
         }
 
