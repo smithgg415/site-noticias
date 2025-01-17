@@ -25,22 +25,7 @@ $stmtAtividades = $conexao->prepare($sqlAtividades);
 $stmtAtividades->bindParam(':usuario_id', $_SESSION['id']);
 $stmtAtividades->execute();
 $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
-
-function time_ago($datetime)
-{
-    $timestamp = strtotime($datetime);
-    $difference = time() - $timestamp;
-    $periods = ['ano' => 31536000, 'mês' => 2592000, 'semana' => 604800, 'dia' => 86400, 'hora' => 3600, 'minuto' => 60];
-    foreach ($periods as $unit => $value) {
-        $unit_time = floor($difference / $value);
-        if ($unit_time > 0) {
-            return "$unit_time " . ($unit_time > 1 ? $unit . "s" : $unit) . " atrás";
-        }
-    }
-    return "Agora";
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -50,258 +35,53 @@ function time_ago($datetime)
     <title>Perfil | <?= htmlspecialchars($usuario->usu_nome) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
-        }
 
-        .container {
-            max-width: 1200px;
-        }
-
-        .card-custom {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            height: 500px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .profile-pic-container {
-            position: relative;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-pic-container img {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 5px solid #007bff;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .camera-icon {
-            position: absolute;
-            bottom: 10px;
-            right: 15%;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            padding: 12px;
-            border-radius: 50%;
-            height: 45px;
-            width: 45px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .camera-icon:hover {
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #5c3c9b, #9c57e6);
-            border: none;
-            padding: 12px 20px;
-            font-weight: bold;
-            border-radius: 50px;
-            transition: 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background: #9c57e6;
-            transform: scale(1.05);
-        }
-
-        .activity-list {
-            height: 300px;
-            overflow-y: scroll;
-            padding-right: 15px;
-        }
-
-        .activity-list li {
-            list-style: none;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-radius: 10px;
-            background: #f1f1f1;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: 0.3s ease;
-        }
-
-        .activity-list li:hover {
-            background: #eaeaea;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .activity-list .activity-text {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .btn-access {
-            border: 1px solid #9c57e6;
-            color: #9c57e6;
-            background: #fff;
-            padding: 8px 16px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s ease;
-        }
-
-        .btn-access:hover {
-            background: #9c57e6;
-            color: #fff;
-            transform: scale(1.05);
-        }
-
-        @media (max-width: 768px) {
-            .row {
-                flex-direction: column;
-            }
-
-            .camera-icon {
-                right: 10%;
-            }
-        }
-
-        footer {
-            background-color: #4b2a9b;
-            color: white;
-            padding: 40px 20px;
-            margin-top: 40px;
-        }
-
-        footer .footer-links {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        footer .footer-links div {
-            flex: 1;
-            min-width: 200px;
-            margin-bottom: 20px;
-        }
-
-        footer .footer-links h5 {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        footer .footer-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
-
-        footer .footer-links a:hover {
-            text-decoration: underline;
-            color: #a02ae1;
-        }
-
-        footer .footer-social-icons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        footer .footer-social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            transition: color 0.3s ease;
-        }
-
-        footer .footer-social-icons a:hover {
-            color: #a02ae1;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            font-size: 0.9rem;
-            margin-top: 20px;
-            color: #ddd;
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            footer .footer-links {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            footer .footer-links div {
-                text-align: center;
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            footer .footer-links h5 {
-                font-size: 1rem;
-            }
-
-            footer .footer-links a {
-                font-size: 0.9rem;
-            }
-
-            footer .footer-social-icons a {
-                font-size: 1.2rem;
-            }
-
-            .footer-bottom {
-                font-size: 0.8rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/perfil.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg shadow" style="
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease-in-out;">
+    <nav class="navbar navbar-expand-lg shadow" style="background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);">
         <div class="container">
-            <a class="navbar-brand text-white fw-bold" href="#">
-                <i class="bi bi-newspaper"></i> INFONEWS
-            </a>
-            <a href="index.php" class="btn btn-primary">Voltar</a>
+            <a class="navbar-brand text-white fw-bold" href="#"><i class="bi bi-newspaper me-2 text-white"></i>INFONEWS</a>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="bi bi-gear me-2"></i>
+                Configurações
+            </button>
         </div>
     </nav>
+
     <div class="container mt-5">
-        <div class="row g-4">
+        <div class="row section" id="profile-activities">
             <div class="col-md-6">
                 <div class="card-custom text-center">
-                    <div class="profile-pic-container">
-                        <img id="profile-pic" src="perfil-padrao.png" alt="Foto de perfil">
-                        <i class="bi bi-camera-fill camera-icon" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
-                    </div>
+                        <div class="profile-pic-container">
+                            <img id="profile-pic" src="perfil-padrao.png" alt="Foto de perfil">
+                            <i class="bi bi-camera-fill camera-icon"></i>
+                        </div>
+                    <h4 class="fw-bold"><?= htmlspecialchars($usuario->usu_nome) ?></h4>
+                    <p class="information mb-5"><?= htmlspecialchars($usuario->usu_email) ?>
+                        <i class="bi bi-envelope-fill me-2"></i>
+                    </p>
+                    <p class="information mb-5"> Seu nível aqui no InfoNews é <?= htmlspecialchars($usuario->usu_nivel) ?>
+                        <i class="bi bi-award-fill me-2"></i>
+                    </p>
+                    <a href="editarusuario.php?id=<?= $usuario->usu_codigo ?>"><button class="btn btn-primary w-100">
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Atualizar perfil</button></a>
+                    <a href="logout.php">
+                        <button class="btn btn-primary w-100 mt-2">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Sair
+                        </button>
+                    </a>
 
-                    <h4 class="fw-bold" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"><?= htmlspecialchars($usuario->usu_nome) ?></h4>
-                    <p class="text-muted" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif"><?= htmlspecialchars($usuario->usu_email) ?></p>
-                    <a href="editarusuario.php?id=<?= $usuario->usu_codigo ?>"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Atualizar perfil</button></a>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="card-custom">
-                    <h4 class="text-center fw-bold" style="font-family:Verdana, Geneva, Tahoma, sans-serif">Atividades Recentes</h4>
+                    <h4 class="text-center fw-bold">Atividades Recentes</h4>
                     <?php if (count($atividades) > 0) : ?>
                         <ul class="activity-list">
                             <?php foreach ($atividades as $atividade) : ?>
@@ -312,28 +92,199 @@ function time_ago($datetime)
                             <?php endforeach; ?>
                         </ul>
                     <?php else : ?>
-                        <p class="text-center text-muted">Nenhuma atividade recente.</p>
+                        <p class="without-activities">
+                            Não encontramos nenhuma atividade recente!
+                        </p>
+                        <a href="index.php" class="btn btn-primary">
+                            <i class="bi bi-newspaper me-2"></i>
+                            Veja as notícias e reaja!</a>
                     <?php endif; ?>
 
+                    <?php if (isset($_SESSION['msg'])) : ?>
+                        <div class='alert alert-success' role='alert'>
+                            <?= $_SESSION['msg']; ?>
+                        </div>
+                        <?php unset($_SESSION['msg']); ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Atualizar Foto de Perfil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="file" class="form-control" id="fileInput" accept="image/*">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="deleteBtn">Excluir foto</button>
+                        <button type="button" class="btn btn-primary" id="uploadBtn">Salvar Foto</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">Atualizar Foto de Perfil</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="file" class="form-control" id="fileInput" accept="image/*">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="deleteBtn">Excluir foto</button>
-                    <button type="button" class="btn btn-primary" id="uploadBtn">Salvar Foto</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Configurações</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5 sidebar">
+                                <ul class="nav flex-column" id="tabs">
+                                    <div id="inicio">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="tab-1" data-bs-toggle="pill" href="#screen1">Verifique seus dados</a>
+                                        </li>
+                                    </div>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-2" data-bs-toggle="pill" href="#screen2">Políticas e Diretrizes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-3" data-bs-toggle="pill" href="#screen3">Desenvolvido por:</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6 tab-content">
+                                <div id="screen1" class="tab-pane fade show active">
+                                    <p class="title-alteracao">Quer <span>alterar</span> algo?</p>
+
+
+                                    <form method="post" action="actionusuario.php">
+                                        <?php
+                                        $sql = 'SELECT * FROM usuarios WHERE usu_codigo = :id';
+                                        $stmt = $conexao->prepare($sql);
+                                        $stmt->bindParam(':id', $_SESSION['id']);
+                                        $stmt->execute();
+                                        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+                                        ?>
+                                        <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
+                                        <input type="hidden" name="acao" value="editar-conta">
+                                        <div class="mb-3">
+                                            <label for="nome" class="form-label">Nome</label>
+                                            <input type="text" class="form-control" name="nome" id="nome" value="<?= $usuario->usu_nome ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" name="email" class="form-control" id="email" value="<?= $usuario->usu_email ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="senha" class="form-label">Senha</label>
+                                            <input type="password" id="senha" name="senha" class="form-control" value="<?= $usuario->usu_senha ?>">
+                                            <small class="text-muted">Não se preocupe, sua senha está criptografada! Caso queira mudar, apenas apague e digite a nova.</small>
+                                        </div>
+                                        <?php if ($usuario->usu_nivel == 'admin') : ?>
+                                            <input type="hidden" name="nivel" value="admin">
+                                        <?php else : ?>
+                                            <input type="hidden" name="nivel" value="usuario">
+                                        <?php endif; ?>
+                                        <div class="container-saveBtn">
+                                            <button type="submit" class="btn btn-primary" id="saveBtn">Salvar</button>
+                                        </div>
+                                    </form>
+                                    <form action="actionusuario.php" method="post" class="form-delete">
+                                        <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
+                                        <p class="delete-message">Deseja excluir sua conta?</p>
+                                        <button type="button" class="btn btn-danger" onclick="confirmarDecisao();">Excluir conta</button>
+
+                                        <div class="modal fade" id="confirmarModal" tabindex="-1" aria-labelledby="confirmarModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog custom-dialog">
+                                                <div class="modal-content custom-content">
+                                                    <div class="modal-header custom-header">
+                                                        <h5 class="modal-title" id="confirmarModalLabel">Confirmar Exclusão de Conta</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body custom-body">
+                                                        <div class="row">
+                                                            <p class="messageNumbers">Por favor, digite os 8 números abaixo para confirmar a exclusão da conta:</p>
+                                                            <p class="generated-numbers"></p>
+                                                        </div>
+                                                        <input type="text" id="usuario-numeros" placeholder="Digite os 8 números" class="form-control">
+                                                    </div>
+                                                    <div class="modal-footer custom-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                                        <button type="button" class="btn btn-danger" onclick="verificarNumeros();">Confirmar Exclusão</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+
+
+
+                                </div>
+                                <div id="screen2" class="tab-pane fade">
+                                    <div class="policy-container">
+                                        <h2>Políticas e Diretrizes do InfoNews</h2>
+                                        <p>
+                                            As Políticas e Diretrizes do InfoNews visam promover uma experiência segura, justa e transparente para todos os usuários. Ao utilizar o InfoNews, você concorda em seguir as seguintes regras e diretrizes:
+                                        </p>
+
+                                        <h3>1. Privacidade e Proteção de Dados</h3>
+                                        <p>
+                                            O InfoNews se compromete a proteger a privacidade de seus usuários. Coletamos e processamos dados pessoais de acordo com nossa <a href="#">Política de Privacidade</a>, que descreve como suas informações são coletadas, utilizadas e protegidas. Garantimos que seus dados serão utilizados apenas para personalizar a experiência no site e enviar notificações relevantes, e nunca serão compartilhados com terceiros sem seu consentimento.
+                                        </p>
+
+                                        <h3>2. Comportamento e Conduta</h3>
+                                        <p>Os usuários devem interagir de forma respeitosa e ética em todas as áreas do InfoNews. É proibido:</p>
+                                        <ul>
+                                            <li>Publicar conteúdo discriminatório, ofensivo ou de ódio.</li>
+                                            <li>Realizar comentários que incitem violência ou discriminação.</li>
+                                            <li>Compartilhar informações falsas, enganosas ou prejudiciais.</li>
+                                            <li>Usar a plataforma para promover atividades ilegais ou fraudulentas.</li>
+                                            <li>Assediar ou atacar outros usuários, seja por meio de mensagens ou comentários.</li>
+                                        </ul>
+                                        <p>
+                                            A plataforma se reserva o direito de remover qualquer conteúdo que viole essas diretrizes e de suspender ou bloquear usuários que desrespeitem essas regras.
+                                        </p>
+
+                                        <h3>3. Propriedade Intelectual</h3>
+                                        <p>
+                                            Todo o conteúdo disponibilizado no InfoNews, incluindo textos, imagens, vídeos e logotipos, é protegido por direitos autorais. O usuário não deve copiar, distribuir, modificar ou utilizar qualquer material do site sem a devida autorização, a menos que tenha sido explicitamente permitido. O InfoNews respeita os direitos autorais e espera que seus usuários façam o mesmo.
+                                        </p>
+
+                                        <h3>4. Uso de Conteúdo</h3>
+                                        <p>
+                                            O InfoNews permite que os usuários compartilhem e comentem notícias, artigos e outros conteúdos. Ao enviar conteúdo para a plataforma, o usuário concede ao InfoNews uma licença não exclusiva, transferível e sublicenciável para usar, exibir, modificar e distribuir esse conteúdo, sempre que necessário, dentro da plataforma e seus canais de comunicação.
+                                        </p>
+
+                                        <h3>5. Segurança da Conta</h3>
+                                        <p>
+                                            Cada usuário é responsável pela segurança de sua conta no InfoNews. Recomendamos que você utilize senhas fortes e únicas, além de ativar a verificação em duas etapas, caso disponível.
+                                        </p>
+                                        <a href="#inicio"><button type="button" class="btn btn-primary">Voltar ao início</button></a>
+
+                                    </div>
+
+                                </div>
+                                <div id="screen3" class="tab-pane fade">
+                                    <div class="programador">
+                                        <h4 class="title-programmer">Programador por trás disso:</h4>
+                                        <p class="text-programmer">Luís Felipe Giacomelli Rodrigues, estudante de programação, focado em Sistemas Web e Aplicativos híbridos. CEO da StartUp Giacomelli Dev's, uma empresa desenvolvedora de sistemas.</p>
+                                        <img src="img/giacomellidevslogo.png" alt="Giacomelli Dev's" style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 20px; border: 2px solid #9c57e6;">
+                                    </div>
+                                    <div class="social-medias">
+                                        <a href="https://github.com/smithgg415" target="_blank">GITHUB <i class="bi-github"></i> </a>
+                                        <a href="https://www.linkedin.com/in/lu%C3%ADs-felipe-giacomelli-rodrigues-1449842a9/" target="_blank">LINKEDIN <i class="bi-linkedin"></i></a>
+                                        <a href="https://www.instagram.com/lf.giacomelli/" target="_blank">INSTAGRAM <i class="bi-instagram"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -370,58 +321,105 @@ function time_ago($datetime)
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('uploadBtn').addEventListener('click', function() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = function() {
-                    localStorage.setItem('profilePic', reader.result);
-                    document.getElementById('profile-pic').src = reader.result;
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-                    modal.hide();
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Por favor, selecione uma imagem.");
+        const uploadBtn = document.getElementById('uploadBtn');
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', function() {
+                const fileInput = document.getElementById('fileInput');
+                if (!fileInput) return;
+
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = function() {
+                        localStorage.setItem('profilePic', reader.result);
+                        updateProfilePicture(reader.result);
+
+                        const modalElement = document.getElementById('uploadModal');
+                        if (modalElement) {
+                            const modal = bootstrap.Modal.getInstance(modalElement);
+                            if (modal) modal.hide();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Por favor, selecione uma imagem.");
+                }
+            });
+        }
+
+        const deleteBtn = document.getElementById('deleteBtn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function() {
+                localStorage.removeItem('profilePic');
+                updateProfilePicture('img/perfil-padrao.png');
+            });
+        }
+
+        function updateProfilePicture(src) {
+            const profilePic = document.getElementById('profile-pic');
+            const deleteBtn = document.getElementById('deleteBtn');
+
+            if (profilePic) {
+                profilePic.src = src;
+                checkDeleteBtnVisibility(src, deleteBtn);
             }
-        });
-        document.getElementById('deleteBtn').addEventListener('click', function() {
-            localStorage.removeItem('profilePic');
-            document.getElementById('profile-pic').src = 'img/perfil-padrao.png';
-        });
+        }
+
+        function checkDeleteBtnVisibility(picSrc, deleteBtn) {
+            if (!deleteBtn) return;
+            deleteBtn.style.display = picSrc.includes('perfil-padrao.png') ? 'none' : 'inline-block';
+        }
+
         window.onload = function() {
-    const savedPic = localStorage.getItem('profilePic');
-    const profilePic = document.getElementById('profile-pic');
-    const deleteBtn = document.getElementById('deleteBtn');
+            const savedPic = localStorage.getItem('profilePic') || 'img/perfil-padrao.png';
+            updateProfilePicture(savedPic);
+        };
+        const cameraIcon = document.querySelector('.camera-icon');
+        const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
 
-    if (savedPic) {
-        profilePic.src = savedPic;
-    } else {
-        profilePic.src = 'img/perfil-padrao.png'; 
-    }
+        cameraIcon.addEventListener('click', function() {
+            uploadModal.show();
+        });
 
-    checkDeleteBtnVisibility(profilePic.src, deleteBtn);
-};
+        function gerarNumerosAleatorios() {
+            let numeros = [];
+            for (let i = 0; i < 8; i++) {
+                numeros.push(Math.floor(Math.random() * 10));
+            }
+            return numeros;
+        }
 
-function checkDeleteBtnVisibility(picSrc, deleteBtn) {
-    if (picSrc.includes('perfil-padrao.png')) {
-        deleteBtn.style.display = 'none';
-    } else {
-        deleteBtn.style.display = 'inline-block';
-    }
-}
+        function confirmarDecisao() {
+            const numerosSorteados = gerarNumerosAleatorios().join('');
+            localStorage.setItem('numerosSorteados', numerosSorteados);
 
-document.getElementById('deleteBtn').addEventListener('click', function() {
-    localStorage.removeItem('profilePic');
-    const profilePic = document.getElementById('profile-pic');
-    const deleteBtn = document.getElementById('deleteBtn');
-    
-    profilePic.src = 'img/perfil-padrao.png';
+            const numerosContainer = document.querySelector('#confirmarModal .generated-numbers');
+            if (numerosContainer) {
+                numerosContainer.textContent = numerosSorteados.split('').join(' '); 
+            }
 
-    checkDeleteBtnVisibility(profilePic.src, deleteBtn);
-});
+            const modal = new bootstrap.Modal(document.getElementById('confirmarModal'));
+            modal.show();
+        }
 
+        function verificarNumeros() {
+            const numerosSorteados = localStorage.getItem('numerosSorteados');
+            const numerosInseridos = document.getElementById('usuario-numeros').value;
+
+            if (numerosSorteados === numerosInseridos) {
+                alert("Conta excluída com sucesso!");
+                document.querySelector('.form-delete').submit();
+            } else {
+                alert("Os números inseridos estão incorretos. Tente novamente.");
+            }
+        }
+
+        document.body.classList.add('modal-open');
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop show';
+        document.body.appendChild(backdrop);
+        document.body.classList.remove('modal-open');
+        document.querySelector('.modal-backdrop').remove();
     </script>
 </body>
 

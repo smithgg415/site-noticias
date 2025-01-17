@@ -9,6 +9,7 @@
 
 <body>
     <?php
+    session_start();
     require 'bd/conexao.php';
     $conexao = conexao::getInstance();
     $acao = (isset($_POST['acao'])) ? $_POST['acao'] : '';
@@ -90,6 +91,60 @@
         else:
             echo "<div class='alert alert-danger' role='alert'>Erro ao editar usuário!</div>";
             echo "<meta http-equiv=refresh content='2;URL=indexnoticia.php'>";
+        endif;
+
+    endif;
+    if ($acao == 'editar-conta'):
+
+        $sql = 'UPDATE usuarios SET usu_nome=:usu_nome, usu_email=:usu_email, usu_senha=:usu_senha, usu_nivel=:usu_nivel WHERE usu_codigo=:usu_codigo';
+
+        $stm = $conexao->prepare($sql);
+        $stm->bindValue(':usu_nome', $usu_nome);
+        $stm->bindValue(':usu_email', $usu_email);
+
+        if (!empty($usu_senha)) {
+            $hashed_password = password_hash($usu_senha, PASSWORD_DEFAULT);
+        } else {
+            $query = $conexao->prepare('SELECT usu_senha FROM usuarios WHERE usu_codigo = :usu_codigo');
+            $query->bindValue(':usu_codigo', $usu_codigo);
+            $query->execute();
+            $hashed_password = $query->fetchColumn();
+        }
+
+        $stm->bindValue(':usu_senha', $hashed_password);
+        $stm->bindValue(':usu_nivel', $usu_nivel);
+        $stm->bindValue(':usu_codigo', $usu_codigo);
+        $retorno = $stm->execute();
+
+        if ($retorno):
+            $_SESSION['msg'] = 'Alteração realizada com sucesso!';
+            header("Location: perfil.php"); 
+            exit;
+        else:
+            $_SESSION['msg'] = 'Erro ao editar usuário!';
+            header("Location: perfil.php");
+            exit;
+        endif;
+
+    endif;
+
+    if ($acao == 'excluir-conta'):
+
+        session_start();
+
+        session_unset();
+        session_destroy(); 
+
+        $sql = 'DELETE FROM usuarios WHERE usu_codigo=:usu_codigo';
+        $stm = $conexao->prepare($sql);
+        $stm->bindValue(':usu_codigo', $usu_codigo);
+        $retorno = $stm->execute();
+
+        if ($retorno):
+            echo "<meta http-equiv='refresh' content='0;URL=index.php'>";
+        else:
+            echo "<div class='alert alert-danger' role='alert'>Erro ao excluir conta!</div>";
+            echo "<meta http-equiFv='refresh' content='2;URL=index.php'>";
         endif;
 
     endif;
