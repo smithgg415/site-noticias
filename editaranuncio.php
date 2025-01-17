@@ -9,7 +9,6 @@ if (!isset($_SESSION["logado099"]) || $_SESSION['nivel'] !== 'admin') {
 require 'bd/conexao.php';
 $conexao = conexao::getInstance();
 
-// Obter o ID do anúncio
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
@@ -125,7 +124,6 @@ if ($id > 0) {
                 </div>
             </div>
 
-            <!-- Pré-visualização da Imagem -->
             <div class="col-lg-6">
                 <div class="image-preview">
                     <?php if (!empty($anuncio['anu_imagem'])): ?>
@@ -138,7 +136,6 @@ if ($id > 0) {
         </div>
     </div>
     <?php include 'footer.php'; ?>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

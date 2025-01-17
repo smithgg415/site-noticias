@@ -9,15 +9,12 @@ if (!isset($_SESSION['logado099'])) {
     $_SESSION['nivel'] = "usuario";
 }
 
-// Conexão com o banco de dados
 require "bd/conexao.php";
 $conexao = conexao::getInstance();
 
-// Recupera o ID da notícia
 if (isset($_GET['id'])) {
     $noticiaId = $_GET['id'];
 
-    // Consulta a notícia pelo ID
     $sqlNoticia = 'SELECT * FROM noticias WHERE not_codigo = :not_codigo';
     $stmNoticia = $conexao->prepare($sqlNoticia);
     $stmNoticia->bindValue(':not_codigo', $noticiaId, PDO::PARAM_INT);
@@ -232,7 +229,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             transition: all 0.3s ease;
         }
 
-        /* Cor de fundo para os ícones */
         .share-button.facebook {
             background-color: #3b5998;
         }

@@ -42,7 +42,6 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <!-- Formulário à esquerda -->
                             <div class="col-lg-6 col-md-6">
                                 <form action="actionnoticia.php" method="post" id="form-noticia" enctype='multipart/form-data'>
                                     <div class="mb-3">

@@ -1011,31 +1011,24 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         window.onload = function() {
-            // Carregar a foto de perfil salva (se houver)
             const savedPic = localStorage.getItem('profilePic') || 'img/perfil-padrao.png';
             updateProfilePicture(savedPic);
 
-            // Abrir o modal de upload de foto ao clicar no ícone da câmera
             const cameraIcon = document.querySelector('.camera-icon');
             const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
             cameraIcon.addEventListener('click', function() {
                 uploadModal.show();
             });
 
-            // Verificar os parâmetros da URL
             const urlParams = new URLSearchParams(window.location.search);
             const openModal = urlParams.get('openModal');
-            const tab = urlParams.get('tab'); // Pega o valor do parâmetro 'tab'
-
+            const tab = urlParams.get('tab'); 
             if (openModal === 'true') {
-                // Abrir o modal de configurações
                 var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
                     keyboard: false
                 });
                 myModal.show();
 
-                // Lógica para abrir a aba correspondente
-                // Primeiro, remove as classes 'active' e 'show' de todas as abas
                 document.querySelectorAll('.tab-pane').forEach(function(tabContent) {
                     tabContent.classList.remove('show', 'active');
                 });
@@ -1043,7 +1036,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                     tabLink.classList.remove('active');
                 });
 
-                // Em seguida, ativa a aba correta
                 if (tab === 'screen2') {
                     document.getElementById('tab-2').classList.add('active');
                     document.getElementById('screen2').classList.add('show', 'active');
@@ -1054,7 +1046,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             }
         };
 
-        // Função para atualizar a foto de perfil
         function updateProfilePicture(src) {
             const profilePic = document.getElementById('profile-pic');
             const deleteBtn = document.getElementById('deleteBtn');
@@ -1065,13 +1056,11 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             }
         }
 
-        // Função para verificar a visibilidade do botão de excluir
         function checkDeleteBtnVisibility(picSrc, deleteBtn) {
             if (!deleteBtn) return;
             deleteBtn.style.display = picSrc.includes('perfil-padrao.png') ? 'none' : 'inline-block';
         }
 
-        // Função para fazer o upload da foto de perfil
         const uploadBtn = document.getElementById('uploadBtn');
         if (uploadBtn) {
             uploadBtn.addEventListener('click', function() {
@@ -1098,7 +1087,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             });
         }
 
-        // Função para excluir a foto de perfil
         const deleteBtn = document.getElementById('deleteBtn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', function() {
@@ -1107,7 +1095,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             });
         }
 
-        // Função para confirmar a exclusão de conta
         function confirmarDecisao() {
             const numerosSorteados = gerarNumerosAleatorios().join('');
             localStorage.setItem('numerosSorteados', numerosSorteados);
@@ -1121,7 +1108,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             modal.show();
         }
 
-        // Função para gerar números aleatórios
         function gerarNumerosAleatorios() {
             let numeros = [];
             for (let i = 0; i < 8; i++) {
@@ -1130,7 +1116,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             return numeros;
         }
 
-        // Função para verificar se os números inseridos pelo usuário para exclusão estão corretos
         function verificarNumeros() {
             const numerosSorteados = localStorage.getItem('numerosSorteados');
             const numerosInseridos = document.getElementById('usuario-numeros').value;

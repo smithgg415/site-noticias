@@ -124,7 +124,6 @@ if ($id > 0) {
                 </div>
             </div>
 
-            <!-- Pré-visualização da Imagem -->
             <div class="col-lg-6">
                 <div class="image-preview">
                     <?php if (!empty($noticia['not_imagem'])): ?>
@@ -137,7 +136,6 @@ if ($id > 0) {
         </div>
     </div>
     <?php include 'footer.php'; ?>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

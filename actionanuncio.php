@@ -16,7 +16,6 @@ $imagem = isset($_POST['imagem']) ? $_POST['imagem'] : '';
 $linkacesso = isset($_POST['linkacesso']) ? $_POST['linkacesso'] : '';
 $mensagem = '';
 
-// Validação para não excluir
 if ($acao != 'excluir') {
     if ($imagem == '' || strlen($imagem) < 3) {
         $mensagem .= '<li>Favor preencher o campo Imagem (mínimo 3 caracteres).</li>';
