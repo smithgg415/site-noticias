@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuário</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,15 +51,43 @@
             color: #555;
         }
 
-        input[type="text"],
-        input[type="email"],
         input[type="password"] {
-            width: 92%;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            border-end-end-radius: 0;
+            border-top-right-radius: 0;
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 92.6%;
             padding: 10px;
             margin-bottom: 1.5rem;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1rem;
+        }
+
+        .password-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .eye-icon {
+            position: relative;
+            right: 0;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+            border: 1px solid #ccc;
+            padding: 8.2px;
+            border-top-right-radius: 10px;
+            border-end-end-radius: 10px;
         }
 
         button {
@@ -97,9 +127,12 @@
                         <label for="email" class="form-label">Email</label>
                         <input type="email" id="email" name="email" class="form-control" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" id="senha" name="senha" class="form-control" required>
+                    <label for="senha" class="form-label">Senha:</label>
+                    <div class="password-container">
+                        <input type="password" id="senha" name="senha" required>
+                        <span class="eye-icon" onclick="togglePassword()">
+                            <i id="eye-icon" class="bi bi-eye"></i>
+                        </span>
                     </div>
                     <input type="hidden" name="nivel" value="usuario">
                     <input type="hidden" name="acao" value="incluir">
@@ -119,7 +152,21 @@
             </div>
         </div>
     </div>
-
+    <script>
+        function togglePassword() {
+            var senhaField = document.getElementById('senha');
+            var eyeIcon = document.getElementById('eye-icon');
+            if (senhaField.type === 'password') {
+                senhaField.type = 'text';
+                eyeIcon.classList.remove('bi-eye');
+                eyeIcon.classList.add('bi-eye-slash');
+            } else {
+                senhaField.type = 'password';
+                eyeIcon.classList.remove('bi-eye-slash');
+                eyeIcon.classList.add('bi-eye');
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

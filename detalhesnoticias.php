@@ -474,11 +474,11 @@ if (isset($_GET['id'])) {
                             <?php endif; ?>
                         </div>
                     </div>
-                    <?php if ($comentarios > 4) : ?>
-                        <a class="text-muted" href="comentarios.php?id=<?= $noticia->not_codigo ?>">Ver todos os comentários</a>
-                    <?php endif; ?>
                 <?php endforeach; ?>
-
+                <?php if (count($comentarios) > 0) : ?>
+                    <hr>
+                <a class="text-muted" href="comentarios.php?id=<?= $noticia->not_codigo ?>">Ver todos os comentários</a>
+                <?php endif; ?>
                 <?php if (count($comentarios) == 0) : ?>
                     <p class="text-muted">Ainda não há comentários nesta notícia.</p>
                 <?php endif; ?>

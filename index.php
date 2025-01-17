@@ -200,7 +200,29 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         $stmNoticia = $conexao->prepare($sqlNoticia);
         $stmNoticia->execute();
         $noticia = $stmNoticia->fetch(PDO::FETCH_OBJ);
-        ?>.last-news {
+        ?>@keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(0);
+                transition: 0.8s linear;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transition: 0.8s linear;
+                transform: translateX(0);
+            }
+        }
+
+        .last-news {
             margin-top: 65px;
             margin-left: 70px;
             position: relative;
@@ -221,6 +243,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             padding-left: 20px;
             padding-bottom: 20px;
+            animation: slideInLeft 0.7s ease-out;
         }
 
         @media (max-width: 768px) {
@@ -228,6 +251,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                 margin-top: 55px;
                 margin-left: 0;
                 height: 500px;
+                animation: slideInLeft 0.7s ease-out;
             }
         }
 
@@ -292,6 +316,14 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             flex-direction: column;
             gap: 25px;
             padding: 0 20px;
+            animation: slideInRight 0.7s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .square-news {
+                padding: 0 15px;
+                animation: slideInRight 0.7s ease-out;
+            }
         }
 
         .news-card {
@@ -392,10 +424,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         }
 
         @media (max-width: 768px) {
-            .square-news {
-                padding: 0 15px;
-            }
-
             .news-card img {
                 height: 180px;
             }
@@ -427,6 +455,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             top: 20px;
             right: 20px;
         }
+
 
         .btn-login {
             display: inline-flex;
