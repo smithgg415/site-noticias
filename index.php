@@ -478,11 +478,39 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         }
 
         .btn-login:hover {
-            background: linear-gradient(45deg, #0056b3, #1C75FF);
+            background: linear-gradient(45deg, red, #1C75FF);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
         .btn-login:hover i {
+            transform: translateX(5px);
+        }
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            background-color:red;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.8s linear;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-logout i {
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: linear-gradient(45deg,red, #1C75FF);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-logout:hover i {
             transform: translateX(5px);
         }
 
@@ -653,7 +681,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                     <?php endif; ?>
                     <li class="nav-item">
                         <?php if ($_SESSION['logado099']) : ?>
-                            <a href="logout.php" class="btn-login">
+                            <a href="logout.php" class="btn-logout">
                                 <i class="bi bi-box-arrow-right"></i> Sair
                             </a>
                         <?php else : ?>

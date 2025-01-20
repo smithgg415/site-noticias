@@ -50,7 +50,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            height: 500px;
+            height: 510px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -58,22 +58,42 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
 
         .profile-pic-container {
             position: relative;
-            text-align: center;
-            margin-bottom: 20px;
+            width: 520px;
+            height: 150px;
+            margin: 0 auto;
         }
 
-        .profile-pic-container img {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 5px solid #007bff;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        .background-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('<?php if (empty($usuario->usu_foto_de_fundo)) : ?>img/background.png<?php else : ?><?= htmlspecialchars($usuario->usu_foto_de_fundo) ?><?php endif; ?>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            border: 2px solid #333;
+
         }
+
+        .profile-img {
+            border: 5px solid white;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
 
         .camera-icon {
             position: absolute;
             bottom: 10px;
-            right: 15%;
+            left: 20%;
+            z-index: 3;
             background: rgba(0, 0, 0, 0.5);
             color: #fff;
             padding: 12px;
@@ -86,6 +106,48 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
 
         .camera-icon:hover {
             background: rgba(0, 0, 0, 0.7);
+        }
+
+        .camera-icon-background {
+            position: absolute;
+            bottom: 10px;
+            right: 5%;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 12px;
+            border-radius: 50%;
+            height: 45px;
+            width: 45px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .camera-icon-background:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .profile-pic-container {
+                width: 100%;
+                height: 200px;
+                border-radius: 10px;
+            }
+
+            .profile-img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .camera-icon {
+                bottom: 10px;
+                left: 24%;
+            }
+
+            .camera-icon-background {
+                bottom: 10px;
+                right: 2%;
+            }
         }
 
         .btn-primary {
@@ -126,35 +188,9 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             color: #333;
         }
 
-
-        .activity-list {
-            height: 300px;
-            overflow-y: auto;
-            padding-right: 15px;
-        }
-
-        .activity-list li {
-            list-style: none;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-radius: 10px;
-            background: #f1f1f1;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: 0.3s ease;
-        }
-
         .activity-list li:hover {
             background: #eaeaea;
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .activity-list .activity-text {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
         }
 
         .btn-access {
@@ -198,7 +234,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         }
 
         .card-custom {
-            min-height: 350px;
+            min-height: 360px;
         }
 
         .modal-dialog {
@@ -278,102 +314,145 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             border-color: #7b44b8;
         }
 
-        #uploadModal .modal-dialog {
+        #uploadModal .modal-dialog,
+        #uploadModalBackground .modal-dialog {
             max-width: 400px;
             height: 300px;
             margin: auto;
             display: flex;
             justify-content: center;
             align-items: center;
+            height: auto;
         }
 
-        #uploadModal .modal-content {
-            margin-top: 40px;
+        #uploadModal .modal-content,
+        #uploadModalBackground .modal-content {
             width: 100%;
-            height: 100%;
             border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            /* Sombra mais suave */
         }
 
-        #uploadModal .modal-header {
+        #uploadModal .modal-header,
+        #uploadModalBackground .modal-header {
             background-color: #4b2a9b;
             color: #fff;
             padding: 10px;
-            border-bottom: 2px solid #9c57e6;
+            border-bottom: 1px solid #9c57e6;
+            text-align: center;
         }
 
-        #uploadModal .modal-title {
-            font-size: 16px;
+        #uploadModal .modal-title,
+        #uploadModalBackground .modal-title {
+            font-size: 14px;
             font-weight: bold;
             text-transform: uppercase;
         }
 
-        #uploadModal .modal-body {
-            flex-grow: 1;
-            padding: 10px;
+        #uploadModal .modal-body,
+        #uploadModalBackground .modal-body {
+            padding: 15px;
             background-color: #f9f9f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             text-align: center;
         }
 
-        #fileInput {
+        #foto {
             width: 100%;
             padding: 8px;
             border: 2px dashed #9c57e6;
             background-color: #fff;
+            margin-bottom: 15px;
             outline: none;
-            transition: all 0.3s ease-in-out;
             text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease-in-out;
         }
 
-        #fileInput:hover {
+        #foto:hover {
             border-color: #7b44b8;
         }
 
-        #fileInput:focus {
+        #foto:focus {
             border-color: #4b2a9b;
             box-shadow: 0 0 5px rgba(75, 42, 155, 0.5);
         }
 
-        #uploadModal .modal-footer {
+        #uploadModal .modal-footer,
+        #uploadModalBackground .modal-footer {
             background-color: #f4f4f4;
-            border-top: 1px solid #ddd;
+            text-align: center;
             padding: 10px;
-            text-align: right;
         }
 
-        #uploadModal .btn {
-            padding: 8px 15px;
-            font-size: 14px;
+        #uploadModal .btn,
+        #uploadModalBackground .btn {
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: bold;
             text-transform: uppercase;
             border-radius: 5px;
+            margin: 5px 0;
+            /* Espaçamento entre os botões */
         }
 
-        #uploadModal .btn-primary {
+        #uploadModal .btn-primary,
+        #uploadModalBackground .btn-primary {
             background-color: #9c57e6;
             border-color: #9c57e6;
         }
 
-        #uploadModal .btn-primary:hover {
+        #uploadModal .btn-primary:hover,
+        #uploadModalBackground .btn-primary:hover {
             background-color: #7b44b8;
             border-color: #7b44b8;
         }
 
-        #uploadModal .btn-danger {
+        #uploadModal .btn-danger,
+        #uploadModalBackground .btn-danger {
             background-color: #d9534f;
             border-color: #d43f3a;
         }
 
-        #uploadModal .btn-danger:hover {
+        #uploadModal .btn-danger:hover,
+        #uploadModalBackground .btn-danger:hover {
             background-color: #c9302c;
             border-color: #ac2925;
         }
+
+        @media (max-width: 576px) {
+
+            #uploadModal .modal-dialog,
+            #uploadModalBackground .modal-dialog {
+                max-width: 90%;
+                /* Para telas pequenas, o modal ocupa 90% da largura */
+            }
+
+            #uploadModal .modal-header,
+            #uploadModal .modal-footer,
+            #uploadModalBackground .modal-header,
+            #uploadModalBackground .modal-footer {
+                padding: 8px;
+                /* Menos espaçamento em telas pequenas */
+            }
+
+            #uploadModal .modal-title,
+            #uploadModalBackground .modal-title {
+                font-size: 12px;
+                /* Fontes menores em telas pequenas */
+            }
+
+            #foto {
+                font-size: 12px;
+                /* Fonte menor no campo de texto */
+            }
+
+            #uploadModal .btn {
+                font-size: 12px;
+                /* Botões menores em telas pequenas */
+                padding: 6px 10px;
+            }
+        }
+
 
         .title-alteracao {
             font-size: 24px;
@@ -668,7 +747,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             font-weight: bold;
             color: #4b2a9b;
             margin-bottom: 20px;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-family: monospace;
         }
 
         .title-programmer {
@@ -737,18 +816,34 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         #exampleModalLabel {
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
+
+        .form-upload {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 200px;
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg shadow" style="background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);">
         <div class="container">
-            <a class="navbar-brand text-white fw-bold" href="#"><i class="bi bi-newspaper me-2 text-white"></i>INFONEWS</a>
+            <div>
+                <a class="navbar-brand text-white fw-bold" href="#"><i class="bi bi-newspaper me-2 text-white"></i>INFONEWS</a>
+            </div>
+            <div>
+                <a href="index.php" class="btn btn-primary mr-3">
+                    <i class="bi-house "></i>
+                    Home
+                </a>
+                <button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="bi bi-gear me-2"></i>
+                    Configurações
+                </button>
 
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <i class="bi bi-gear me-2"></i>
-                Configurações
-            </button>
+            </div>
         </div>
     </nav>
 
@@ -757,9 +852,17 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             <div class="col-md-6">
                 <div class="card-custom text-center">
                     <div class="profile-pic-container">
-                        <img id="profile-pic" src="perfil-padrao.png" alt="Foto de perfil">
+                        <div class="background-img"></div>
+                        <?php if (empty($usuario->usu_foto)): ?>
+                            <img class="profile-img" src="img/perfil-padrao.png" alt="Foto de perfil de <?= htmlspecialchars($usuario->usu_nome) ?>">
+                        <?php else: ?>
+                            <img class="profile-img" src="<?= htmlspecialchars($usuario->usu_foto) ?>" alt="Foto de perfil de <?= htmlspecialchars($usuario->usu_nome) ?>">
+                        <?php endif; ?>
                         <i class="bi bi-camera-fill camera-icon"></i>
+                        <i class="bi bi-camera-fill camera-icon-background"></i>
                     </div>
+
+
                     <h4 class="fw-bold"><?= htmlspecialchars($usuario->usu_nome) ?></h4>
                     <p class="information mb-2"><?= htmlspecialchars($usuario->usu_email) ?>
                         <i class="bi bi-envelope-fill me-2"></i>
@@ -767,16 +870,25 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                     <p class="information"> Seu nível aqui no InfoNews é <?= htmlspecialchars($usuario->usu_nivel) ?>
                         <?php if ($usuario->usu_nivel == 'admin') : ?>
                             <i class="bi bi-award-fill me-2" style="color:#FFD700;background-color:black;
-                        padding:5px;border-radius:10px; box-shadow: 0 0 1em black;"></i>
+                        padding:5px;border-radius:10px; box-shadow: 0 0 0.6em black;"></i>
                         <?php else: ?>
                             <i class="bi bi-award-fill me-2" style="color:#C0C0C0;background-color:black;
-                        padding:5px;border-radius:10px; box-shadow: 0 0 1em black;"></i>
+                        padding:5px;border-radius:10px; box-shadow: 0 0 0.6em black;"></i>
                         <?php endif; ?>
-
                     </p>
-                    <a href="editarusuario.php?id=<?= $usuario->usu_codigo ?>"><button class="btn btn-primary w-100">
+                    <a href="perfil.php?openModal=true&tab=screen1"><button class="btn btn-primary w-100">
                             <i class="bi bi-pencil-square me-2"></i>
-                            Atualizar perfil</button></a>
+                            Atualizar perfil</button>
+                    </a>
+                    <?php if ($usuario->usu_nivel == 'admin') : ?>
+                        <a href="indexnoticia.php" class="btn btn-primary w-100 mb-1 mt-2">
+                            <i class="bi bi-journal-text me-2"></i>
+                            Acesse o painel de controle</a>
+                    <?php else : ?>
+                        <a href="index.php" class="btn btn-primary w-100 mb-1 mt-2">
+                            <i class="bi bi-newspaper me-2"></i>
+                            Veja as notícias</a>
+                    <?php endif; ?>
                     <a href="logout.php">
                         <button class="btn btn-primary w-100 mt-2">
                             <i class="bi bi-box-arrow-right me-2"></i>
@@ -826,16 +938,66 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="file" class="form-control" id="fileInput" accept="image/*">
+                        <form action="actionfoto.php" method="post" class="form-upload">
+                            <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
+                            <input type="hidden" name="acao" value="editar-foto">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="usu_foto" id="foto" placeholder="Insira o link para a sua foto de perfil" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Salvar Foto</button>
+                        </form>
                     </div>
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="deleteBtn">Excluir foto</button>
-                        <button type="button" class="btn btn-primary" id="uploadBtn">Salvar Foto</button>
+                        <form method="post" action="actionfoto.php" class="form-delete">
+                            <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
+                            <input type="hidden" name="acao" value="excluir-foto">
+                            <p class="delete-message">Deseja excluir a foto de perfil?</p>
+                            <button type="submit" class="btn btn-danger w-100">Excluir Foto</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="uploadModalBackground" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Atualizar Foto de Perfil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="actionfoto.php" method="post" class="form-upload">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($usuario->usu_codigo, ENT_QUOTES, 'UTF-8') ?>">
+                            <input type="hidden" name="acao" value="editar-foto-de-fundo">
+                            <div class="mb-3">
+                                <label for="foto_de_fundo" class="form-label">Insira o link para a sua foto de fundo</label>
+                                <input
+                                    type="url"
+                                    class="form-control"
+                                    name="foto_de_fundo"
+                                    id="foto_de_fundo"
+                                    placeholder="https://exemplo.com/imagem.jpg"
+                                    required
+                                    pattern="https?://.+">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Salvar Foto</button>
+                        </form>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <form method="post" action="actionfoto.php" class="form-delete">
+                            <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
+                            <input type="hidden" name="acao" value="excluir-foto-de-fundo">
+                            <p class="delete-message">Deseja excluir a foto de fundo?</p>
+                            <button type="submit" class="btn btn-danger w-100">Excluir Foto de fundo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -1010,89 +1172,48 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
     <?php include 'footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        window.onload = function() {
-            const savedPic = localStorage.getItem('profilePic') || 'img/perfil-padrao.png';
-            updateProfilePicture(savedPic);
+        const cameraIcon = document.querySelector('.camera-icon');
+        const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+        cameraIcon.addEventListener('click', function() {
+            uploadModal.show();
+        });
+        const cameraIconBackground = document.querySelector('.camera-icon-background'); // Usando a classe correta
+        const uploadModalBackground = new bootstrap.Modal(document.getElementById('uploadModalBackground'));
+        cameraIconBackground.addEventListener('click', function() {
+            uploadModalBackground.show(); // Abrindo o modal ao clicar no ícone de câmera
+        });
 
-            const cameraIcon = document.querySelector('.camera-icon');
-            const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
-            cameraIcon.addEventListener('click', function() {
-                uploadModal.show();
+
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const openModal = urlParams.get('openModal');
+        const tab = urlParams.get('tab');
+
+        if (openModal === 'true') {
+            var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+                keyboard: false
+            });
+            myModal.show();
+
+            document.querySelectorAll('.tab-pane').forEach(function(tabContent) {
+                tabContent.classList.remove('show', 'active');
+            });
+            document.querySelectorAll('.nav-link').forEach(function(tabLink) {
+                tabLink.classList.remove('active');
             });
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const openModal = urlParams.get('openModal');
-            const tab = urlParams.get('tab'); 
-            if (openModal === 'true') {
-                var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
-                    keyboard: false
-                });
-                myModal.show();
-
-                document.querySelectorAll('.tab-pane').forEach(function(tabContent) {
-                    tabContent.classList.remove('show', 'active');
-                });
-                document.querySelectorAll('.nav-link').forEach(function(tabLink) {
-                    tabLink.classList.remove('active');
-                });
-
-                if (tab === 'screen2') {
-                    document.getElementById('tab-2').classList.add('active');
-                    document.getElementById('screen2').classList.add('show', 'active');
-                } else {
-                    document.getElementById('tab-1').classList.add('active');
-                    document.getElementById('screen1').classList.add('show', 'active');
-                }
-            }
-        };
-
-        function updateProfilePicture(src) {
-            const profilePic = document.getElementById('profile-pic');
-            const deleteBtn = document.getElementById('deleteBtn');
-
-            if (profilePic) {
-                profilePic.src = src;
-                checkDeleteBtnVisibility(src, deleteBtn);
+            if (tab === 'screen2') {
+                document.getElementById('tab-2').classList.add('active');
+                document.getElementById('screen2').classList.add('show', 'active');
+            } else {
+                document.getElementById('tab-1').classList.add('active');
+                document.getElementById('screen1').classList.add('show', 'active');
             }
         }
 
         function checkDeleteBtnVisibility(picSrc, deleteBtn) {
             if (!deleteBtn) return;
             deleteBtn.style.display = picSrc.includes('perfil-padrao.png') ? 'none' : 'inline-block';
-        }
-
-        const uploadBtn = document.getElementById('uploadBtn');
-        if (uploadBtn) {
-            uploadBtn.addEventListener('click', function() {
-                const fileInput = document.getElementById('fileInput');
-                if (!fileInput) return;
-
-                const file = fileInput.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = function() {
-                        localStorage.setItem('profilePic', reader.result);
-                        updateProfilePicture(reader.result);
-
-                        const modalElement = document.getElementById('uploadModal');
-                        if (modalElement) {
-                            const modal = bootstrap.Modal.getInstance(modalElement);
-                            if (modal) modal.hide();
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    alert("Por favor, selecione uma imagem.");
-                }
-            });
-        }
-
-        const deleteBtn = document.getElementById('deleteBtn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function() {
-                localStorage.removeItem('profilePic');
-                updateProfilePicture('img/perfil-padrao.png');
-            });
         }
 
         function confirmarDecisao() {
@@ -1122,7 +1243,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
 
             if (numerosSorteados === numerosInseridos) {
                 alert("Conta excluída com sucesso!");
-                document.querySelector('.form-delete').submit(); // Submete o formulário de exclusão
+                document.querySelector('.form-delete').submit();
             } else {
                 alert("Os números inseridos estão incorretos. Tente novamente.");
             }

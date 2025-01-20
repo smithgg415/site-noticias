@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo 
+    $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo, c.usu_codigo
                     FROM comentarios c 
                     JOIN usuarios u ON c.usu_codigo = u.usu_codigo 
                     WHERE c.not_codigo = :not_codigo
@@ -43,6 +43,10 @@ $sql = "SELECT * FROM anuncios ORDER BY anu_codigo DESC LIMIT 1";
 $stm = $conexao->prepare($sql);
 $stm->execute();
 $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
+$maxLength = 320;
+$conteudo = nl2br(htmlspecialchars($noticia->not_conteudo));
+$isLong = strlen(strip_tags($conteudo)) > $maxLength;
+$preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -229,6 +233,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             transition: all 0.3s ease;
         }
 
+        /* Cor de fundo para os ícones */
         .share-button.facebook {
             background-color: #3b5998;
         }
@@ -288,6 +293,35 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                 font-size: 0.95rem;
             }
         }
+
+        .noticia-conteudo {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .ver-mais-btn {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: #007bff;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 5px;
+        }
+
+        .ver-mais-btn:hover {
+            text-decoration: underline;
+        }
+        .link_user{
+            text-decoration: none;
+            color: #000;
+        }
+        .link_user:hover{
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -302,10 +336,23 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                 <div class="card shadow-sm border-light mb-4">
                     <div class="card-body">
                         <h1 class="display-4 display-sm-5 display-xs-6 font-weight-bold text-dark"><?= htmlspecialchars($noticia->not_titulo) ?></h1>
-                        <p class="lead text-muted"><?= nl2br(htmlspecialchars($noticia->not_conteudo)) ?></p>
+                        <p class="noticia-conteudo">
+                            <span id="conteudo-preview"><?= $isLong ? $preview : $conteudo ?></span>
+                            <?php if ($isLong): ?>
+                                <span id="conteudo-completo" style="display: none;"><?= $conteudo ?></span>
+                                <button id="ver-mais" class="ver-mais-btn" onclick="toggleConteudo()">Ver mais</button>
+                            <?php endif; ?>
+                        </p>
                         <div class="text-right text-muted">
-                            <small>Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?></small>
+                            <small>
+                                <?php if ($noticia->updated_at != $noticia->not_publicado_em): ?>
+                                    Atualizado em <?= date('d/m/Y', strtotime($noticia->updated_at)) . " às " . date('H:i', strtotime($noticia->updated_at)) ?>
+                                <?php else: ?>
+                                    Publicado em <?= date('d/m/Y', strtotime($noticia->not_publicado_em)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?>
+                                <?php endif; ?>
+                            </small>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -349,7 +396,18 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                 <?php foreach ($comentarios as $comentario) : ?>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <p><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>: <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?></p>
+                            <p>
+                                <?php if ($comentario->usu_codigo == $_SESSION['id']) : ?>
+                                    <a href="perfil.php" class="link_user">
+                                        <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
+                                    </a>
+                                <?php else : ?>
+                                    <a href="userAccount.php?id=<?= $comentario->usu_codigo ?>" class="link_user">
+                                        <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
+                                    </a>
+                                <?php endif; ?>
+                                    : <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?>
+                            </p>
                             <small class="text-muted">Publicado em <?= date('d/m/Y H:i', strtotime($comentario->com_criadoem)) ?></small>
                             <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
                                 <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
@@ -401,6 +459,22 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
 
         function editComment(id) {
             window.location.href = 'editarcomentario.php?com_codigo=' + id;
+        }
+
+        function toggleConteudo() {
+            let preview = document.getElementById("conteudo-preview");
+            let completo = document.getElementById("conteudo-completo");
+            let botao = document.getElementById("ver-mais");
+
+            if (preview.style.display === "none") {
+                preview.style.display = "inline";
+                completo.style.display = "none";
+                botao.innerText = "Ver mais";
+            } else {
+                preview.style.display = "none";
+                completo.style.display = "inline";
+                botao.innerText = "Ver menos";
+            }
         }
     </script>
 </body>

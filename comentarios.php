@@ -177,28 +177,32 @@ $noticia = $stm->fetch(PDO::FETCH_OBJ);
             background-color: #2b3e7d;
             transform: scale(1);
         }
+
+        .link_user {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .link_user:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg shadow" style="
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease-in-out;">
-        <div class="container">
-            <a class="navbar-brand text-white fw-bold" href="#">
-                <i class="bi bi-newspaper"></i> INFONEWS
-            </a>
-            <a href="index.php" class="btn btn-primary">Voltar</a>
-        </div>
-    </nav>
+    <?php include 'header.php'; ?>
+
     <div class="comments-section">
         <h2 class="comments-title">Comentários de "<?= $noticia->not_titulo ?>"</h2>
 
         <?php foreach ($comentarios as $comentario) : ?>
             <div class="comment-card">
                 <div class="comment-header">
-                    <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
+                    <?php if ($comentario->usu_codigo == $_SESSION['id']) : ?>
+                        <a href="perfil.php" class="link_user"><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong></a>
+                    <?php else : ?>
+                        <a href="userAccount.php?id=<?= $comentario->usu_codigo ?>" class="link_user"><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong></a>
+                    <?php endif; ?>
                     <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
                         <button class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</button>
                         <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
