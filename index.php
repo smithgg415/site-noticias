@@ -753,6 +753,8 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             </div>
         </div>
     </div>
+    <h2 class="titulo-noticias">Previsão do tempo:</h2>
+    <?php include "clima-atual.html"; ?>
     <?php include "carrossel_anuncios.php"; ?>
     <h2 class="titulo-noticias">Últimas notícias:</h2>
 

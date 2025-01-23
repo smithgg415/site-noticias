@@ -348,9 +348,9 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
                         <div class="text-right text-muted">
                             <small>
                                 <?php if ($noticia->updated_at != $noticia->not_publicado_em): ?>
-                                    Atualizado em <?= date('d/m/Y', strtotime($noticia->updated_at)) . " às " . date('H:i', strtotime($noticia->updated_at)) ?>
+                                    Atualizado em <?= date('d/m/Y', strtotime($noticia->updated_at)) . " às " . date('H:i', strtotime($noticia->updated_at)) ?> | Por InfoNews <img src="img/logoinfonews.jpg" alt="InfoNews" width="20" class="rounded-circle">
                                 <?php else: ?>
-                                    Publicado em <?= date('d/m/Y', strtotime($noticia->not_publicado_em)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?>
+                                    Publicado em <?= date('d/m/Y', strtotime($noticia->not_publicado_em)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?> | Por InfoNews <img src="img/logoinfonews.jpg" alt="InfoNews" width="20" class="rounded-circle">
                                 <?php endif; ?>
                             </small>
                         </div>
