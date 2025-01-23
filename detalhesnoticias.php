@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo, c.usu_codigo
+    $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo, c.usu_codigo, u.usu_foto
                     FROM comentarios c 
                     JOIN usuarios u ON c.usu_codigo = u.usu_codigo 
                     WHERE c.not_codigo = :not_codigo
@@ -315,11 +315,13 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
         .ver-mais-btn:hover {
             text-decoration: underline;
         }
-        .link_user{
+
+        .link_user {
             text-decoration: none;
             color: #000;
         }
-        .link_user:hover{
+
+        .link_user:hover {
             text-decoration: underline;
         }
     </style>
@@ -399,16 +401,27 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
                             <p>
                                 <?php if ($comentario->usu_codigo == $_SESSION['id']) : ?>
                                     <a href="perfil.php" class="link_user">
+                                        <?php if (empty($comentario->usu_foto)) : ?>
+                                            <img src="img/perfil-padrao.png" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                                        <?php else : ?>
+                                            <img src="<?= $comentario->usu_foto ?>" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                                        <?php endif; ?>
                                         <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
                                     </a>
                                 <?php else : ?>
                                     <a href="userAccount.php?id=<?= $comentario->usu_codigo ?>" class="link_user">
+                                        <?php if (empty($comentario->usu_foto)) : ?>
+                                            <img src="img/perfil-padrao.png" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                                        <?php else : ?>
+                                            <img src="<?= $comentario->usu_foto ?>" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                                        <?php endif; ?>
                                         <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
                                     </a>
                                 <?php endif; ?>
-                                    : <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?>
+                                : <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?>
                             </p>
-                            <small class="text-muted">Publicado em <?= date('d/m/Y H:i', strtotime($comentario->com_criadoem)) ?></small>
+                            <small class="text-muted"> Publicado em <?= date('d/m/Y', strtotime($comentario->com_criadoem)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?>
+                            </small>
                             <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
                                 <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
                                 <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
