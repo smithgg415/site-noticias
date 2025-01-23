@@ -118,7 +118,7 @@
 
         if ($retorno):
             $_SESSION['msg'] = 'Alteração realizada com sucesso!';
-            header("Location: perfil.php"); 
+            header("Location: perfil.php");
             exit;
         else:
             $_SESSION['msg'] = 'Erro ao editar usuário!';
@@ -127,29 +127,6 @@
         endif;
 
     endif;
-
-    if ($acao == 'excluir-conta'):
-
-        session_start();
-
-        session_unset();
-        session_destroy(); 
-
-        $sql = 'DELETE FROM usuarios WHERE usu_codigo=:usu_codigo';
-        $stm = $conexao->prepare($sql);
-        $stm->bindValue(':usu_codigo', $usu_codigo);
-        $retorno = $stm->execute();
-
-        if ($retorno):
-            echo "<meta http-equiv='refresh' content='0;URL=index.php'>";
-        else:
-            echo "<div class='alert alert-danger' role='alert'>Erro ao excluir conta!</div>";
-            echo "<meta http-equiv='refresh' content='2;URL=index.php'>";
-        endif;
-
-    endif;
-
-
     if ($acao == 'excluir'):
 
         $sql = 'DELETE FROM usuarios WHERE usu_codigo=:usu_codigo';

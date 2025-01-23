@@ -1,6 +1,6 @@
 <?php
 
-$sql = 'SELECT * FROM anuncios ORDER BY anu_codigo DESC';
+$sql = 'SELECT * FROM anuncios';
 $stm = $conexao->prepare($sql);
 $stm->execute();
 $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
@@ -40,7 +40,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
 
 <body>
     <div class="container mt-4" id="anuncios">
-        <div id="anuncioCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+        <div id="anuncioCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
             <div class="carousel-inner">
                 <?php foreach ($anuncios as $index => $anuncio) : ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">

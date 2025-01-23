@@ -77,6 +77,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
 
         }
 
+
         .profile-img {
             border: 5px solid white;
             position: absolute;
@@ -330,7 +331,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             width: 100%;
             border-radius: 10px;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            /* Sombra mais suave */
         }
 
         #uploadModal .modal-header,
@@ -356,23 +356,26 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             text-align: center;
         }
 
-        #foto {
+        #foto,
+        #foto_de_fundo {
             width: 100%;
             padding: 8px;
             border: 2px dashed #9c57e6;
             background-color: #fff;
             margin-bottom: 15px;
             outline: none;
-            text-align: center;
             font-size: 14px;
+            font-weight: bold;
             transition: all 0.3s ease-in-out;
         }
 
-        #foto:hover {
+        #foto:hover,
+        #foto_de_fundo:hover {
             border-color: #7b44b8;
         }
 
-        #foto:focus {
+        #foto:focus,
+        #foto_de_fundo:focus {
             border-color: #4b2a9b;
             box-shadow: 0 0 5px rgba(75, 42, 155, 0.5);
         }
@@ -392,7 +395,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             text-transform: uppercase;
             border-radius: 5px;
             margin: 5px 0;
-            /* Espaçamento entre os botões */
         }
 
         #uploadModal .btn-primary,
@@ -424,7 +426,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             #uploadModal .modal-dialog,
             #uploadModalBackground .modal-dialog {
                 max-width: 90%;
-                /* Para telas pequenas, o modal ocupa 90% da largura */
             }
 
             #uploadModal .modal-header,
@@ -432,23 +433,19 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             #uploadModalBackground .modal-header,
             #uploadModalBackground .modal-footer {
                 padding: 8px;
-                /* Menos espaçamento em telas pequenas */
             }
 
             #uploadModal .modal-title,
             #uploadModalBackground .modal-title {
                 font-size: 12px;
-                /* Fontes menores em telas pequenas */
             }
 
             #foto {
                 font-size: 12px;
-                /* Fonte menor no campo de texto */
             }
 
             #uploadModal .btn {
                 font-size: 12px;
-                /* Botões menores em telas pequenas */
                 padding: 6px 10px;
             }
         }
@@ -483,6 +480,21 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             max-width: 500px;
             width: 500px;
             height: 420px;
+            margin: 20px auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .form-pic {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            max-width: 500px;
+            width: 500px;
+            height: 260px;
             margin: 20px auto;
             background-color: #f9f9f9;
             padding: 20px;
@@ -542,8 +554,10 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         }
 
         @media (max-width: 576px) {
-            form {
-                width: 90%;
+
+            form,
+            .form-pic {
+                width: 94%;
                 padding: 15px;
                 margin: 10px;
             }
@@ -806,6 +820,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         }
 
         .information {
+            margin-top: 10px;
             font-size: 20px;
             font-weight: bold;
             color: #333;
@@ -824,26 +839,32 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             flex-direction: column;
             height: 200px;
         }
+
+        @media (max-width: 576px) {
+            #usu_nome {
+                font-size: 19px;
+            }
+
+            #usu_email {
+                font-size: 15px;
+            }
+
+            #usu_nivel {
+                font-size: 15px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg shadow" style="background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);">
         <div class="container">
-            <div>
-                <a class="navbar-brand text-white fw-bold" href="#"><i class="bi bi-newspaper me-2 text-white"></i>INFONEWS</a>
-            </div>
-            <div>
-                <a href="index.php" class="btn btn-primary mr-3">
-                    <i class="bi-house "></i>
-                    Home
-                </a>
-                <button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <i class="bi bi-gear me-2"></i>
-                    Configurações
-                </button>
+            <a class="navbar-brand text-white fw-bold" href="#"><i class="bi bi-newspaper me-2 text-white"></i>INFONEWS</a>
+            <button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="bi bi-gear me-2"></i>
+                Configurações
+            </button>
 
-            </div>
         </div>
     </nav>
 
@@ -861,13 +882,11 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                         <i class="bi bi-camera-fill camera-icon"></i>
                         <i class="bi bi-camera-fill camera-icon-background"></i>
                     </div>
-
-
-                    <h4 class="fw-bold"><?= htmlspecialchars($usuario->usu_nome) ?></h4>
-                    <p class="information mb-2"><?= htmlspecialchars($usuario->usu_email) ?>
+                    <h4 class="fw-bold" id="usu_nome"><?= htmlspecialchars($usuario->usu_nome) ?></h4>
+                    <p class="information mb-2" id="usu_email"><?= htmlspecialchars($usuario->usu_email) ?>
                         <i class="bi bi-envelope-fill me-2"></i>
                     </p>
-                    <p class="information"> Seu nível aqui no InfoNews é <?= htmlspecialchars($usuario->usu_nivel) ?>
+                    <p class="information" id="usu_nivel"> Seu nível aqui no InfoNews é <?= htmlspecialchars($usuario->usu_nivel) ?>
                         <?php if ($usuario->usu_nivel == 'admin') : ?>
                             <i class="bi bi-award-fill me-2" style="color:#FFD700;background-color:black;
                         padding:5px;border-radius:10px; box-shadow: 0 0 0.6em black;"></i>
@@ -930,7 +949,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
             </div>
 
         </div>
-        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal fade mt-5" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -941,9 +960,17 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                         <form action="actionfoto.php" method="post" class="form-upload">
                             <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
                             <input type="hidden" name="acao" value="editar-foto">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" name="usu_foto" id="foto" placeholder="Insira o link para a sua foto de perfil" required>
-                            </div>
+                            <label for="foto_de_fundo" class="form-label">Altere o link da sua foto de perfil</label>
+
+                            <?php if (empty($usuario->usu_foto)): ?>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" name="usu_foto" id="foto" placeholder="Altere o link para a sua foto de perfil" required>
+                                </div>
+                            <?php else: ?>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" name="usu_foto" id="foto" value="<?= $usuario->usu_foto ?>" required>
+                                </div>
+                            <?php endif; ?>
                             <button type="submit" class="btn btn-primary w-100">Salvar Foto</button>
                         </form>
                     </div>
@@ -959,28 +986,34 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="uploadModalBackground" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal fade mt-5" id="uploadModalBackground" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="uploadModalLabel">Atualizar Foto de Perfil</h5>
+                        <h5 class="modal-title" id="uploadModalLabel">Atualizar Foto de fundo</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="actionfoto.php" method="post" class="form-upload">
                             <input type="hidden" name="id" value="<?= htmlspecialchars($usuario->usu_codigo, ENT_QUOTES, 'UTF-8') ?>">
                             <input type="hidden" name="acao" value="editar-foto-de-fundo">
-                            <div class="mb-3">
-                                <label for="foto_de_fundo" class="form-label">Insira o link para a sua foto de fundo</label>
-                                <input
-                                    type="url"
-                                    class="form-control"
-                                    name="foto_de_fundo"
-                                    id="foto_de_fundo"
-                                    placeholder="https://exemplo.com/imagem.jpg"
-                                    required
-                                    pattern="https?://.+">
-                            </div>
+                            <?php if (empty($usuario->usu_foto_de_fundo)): ?>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" name="foto_de_fundo" id="foto_de_fundo" placeholder="Insira o link para a sua foto de fundo" required>
+                                </div>
+                            <?php else: ?>
+                                <div class="mb-3">
+                                    <label for="foto_de_fundo" class="form-label">Altere o link da sua foto de fundo</label>
+                                    <input
+                                        type="url"
+                                        class="form-control"
+                                        name="foto_de_fundo"
+                                        id="foto_de_fundo"
+                                        value="<?= $usuario->usu_foto_de_fundo ?>"
+                                        required
+                                        pattern="https?://.+">
+                                </div>
+                            <?php endif; ?>
                             <button type="submit" class="btn btn-primary w-100">Salvar Foto</button>
                         </form>
 
@@ -1029,8 +1062,26 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                             <div class="col-md-6 tab-content">
                                 <div id="screen1" class="tab-pane fade show active">
                                     <p class="title-alteracao">Quer <span>alterar</span> algo?</p>
-
-
+                                    <form method="post" action="actionfoto.php" class="form-pic">
+                                        <?php
+                                        $sql = 'SELECT usu_foto, usu_foto_de_fundo FROM usuarios WHERE usu_codigo = :id';
+                                        $stmt = $conexao->prepare($sql);
+                                        $stmt->bindParam(':id', $_SESSION['id']);
+                                        $stmt->execute();
+                                        $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+                                        ?>
+                                        <input type="text" name="id" value="<?= $usuario->usu_codigo ?>" hidden>
+                                        <input type="text" name="acao" value="editar-foto" hidden>
+                                        <div class="mb-3">
+                                            <label for="foto" class="form-label">Foto de Perfil:</label>
+                                            <input type="text" class="form-control" name="foto" id="foto" value="<?= $usuario->usu_foto ?>">
+                                        </div>
+                                        <div clsas="mb-3">
+                                            <label for="foto de fundo">Foto de Fundo:</label>
+                                            <input type="text" class="form-control" name="foto_de_fundo" id="foto_de_fundo" value="<?= $usuario->usu_foto_de_fundo ?>">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="saveBtn">Salvar</button>
+                                    </form>
                                     <form method="post" action="actionusuario.php">
                                         <?php
                                         $sql = 'SELECT * FROM usuarios WHERE usu_codigo = :id';
@@ -1063,39 +1114,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                                             <button type="submit" class="btn btn-primary" id="saveBtn">Salvar</button>
                                         </div>
                                     </form>
-                                    <form action="actionusuario.php" method="post" class="form-delete">
-                                        <input type="hidden" name="id" value="<?= $usuario->usu_codigo ?>">
-                                        <p class="delete-message">Deseja excluir sua conta?</p>
-                                        <button type="button" class="btn btn-danger" onclick="confirmarDecisao();">
-                                            <i class="bi bi-trash-fill ms-2"></i>
-                                            Excluir conta</button>
-
-                                        <div class="modal fade" id="confirmarModal" tabindex="-1" aria-labelledby="confirmarModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog custom-dialog">
-                                                <div class="modal-content custom-content">
-                                                    <div class="modal-header custom-header">
-                                                        <h5 class="modal-title" id="confirmarModalLabel">Confirmar Exclusão de Conta</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body custom-body">
-                                                        <div class="row">
-                                                            <p class="messageNumbers">Por favor, digite os 8 números abaixo para confirmar a exclusão da conta:</p>
-                                                            <p class="generated-numbers"></p>
-                                                        </div>
-                                                        <input type="text" id="usuario-numeros" placeholder="Digite os 8 números" class="form-control">
-                                                    </div>
-                                                    <div class="modal-footer custom-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                                                        <button type="button" class="btn btn-danger" onclick="verificarNumeros();">Confirmar Exclusão
-                                                            <i class="bi bi-trash-fill ms-2"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </form>
-
 
 
 
@@ -1180,7 +1198,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         const cameraIconBackground = document.querySelector('.camera-icon-background'); // Usando a classe correta
         const uploadModalBackground = new bootstrap.Modal(document.getElementById('uploadModalBackground'));
         cameraIconBackground.addEventListener('click', function() {
-            uploadModalBackground.show(); // Abrindo o modal ao clicar no ícone de câmera
+            uploadModalBackground.show();
         });
 
 
@@ -1214,39 +1232,6 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         function checkDeleteBtnVisibility(picSrc, deleteBtn) {
             if (!deleteBtn) return;
             deleteBtn.style.display = picSrc.includes('perfil-padrao.png') ? 'none' : 'inline-block';
-        }
-
-        function confirmarDecisao() {
-            const numerosSorteados = gerarNumerosAleatorios().join('');
-            localStorage.setItem('numerosSorteados', numerosSorteados);
-
-            const numerosContainer = document.querySelector('#confirmarModal .generated-numbers');
-            if (numerosContainer) {
-                numerosContainer.textContent = numerosSorteados.split('').join(' ');
-            }
-
-            const modal = new bootstrap.Modal(document.getElementById('confirmarModal'));
-            modal.show();
-        }
-
-        function gerarNumerosAleatorios() {
-            let numeros = [];
-            for (let i = 0; i < 8; i++) {
-                numeros.push(Math.floor(Math.random() * 10));
-            }
-            return numeros;
-        }
-
-        function verificarNumeros() {
-            const numerosSorteados = localStorage.getItem('numerosSorteados');
-            const numerosInseridos = document.getElementById('usuario-numeros').value;
-
-            if (numerosSorteados === numerosInseridos) {
-                alert("Conta excluída com sucesso!");
-                document.querySelector('.form-delete').submit();
-            } else {
-                alert("Os números inseridos estão incorretos. Tente novamente.");
-            }
         }
     </script>
 </body>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20/01/2025 às 08:06
+-- Tempo de geração: 23/01/2025 às 03:11
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `anuncios` (
   `anu_codigo` int(11) NOT NULL,
   `anu_imagem` varchar(255) NOT NULL,
-  `anu_linkacesso` varchar(255) NOT NULL,
+  `anu_linkacesso` varchar(255) DEFAULT NULL,
   `anu_nome` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -65,7 +65,7 @@ INSERT INTO `comentarios` (`com_codigo`, `usu_codigo`, `not_codigo`, `com_conteu
 (84, 9, 12, 'muito foda!', '2025-01-17 07:51:58'),
 (85, 9, 9, 'Muito lindo de se ver!', '2025-01-17 19:00:51'),
 (86, 29, 9, 'parabens', '2025-01-17 21:33:55'),
-(87, 16, 9, 'Muito lindo ver a', '2025-01-20 04:49:46');
+(88, 19, 23, 'Empresa sempre se destacando!', '2025-01-23 01:54:34');
 
 -- --------------------------------------------------------
 
@@ -127,17 +127,16 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`usu_codigo`, `usu_nome`, `usu_email`, `usu_senha`, `created_at`, `updated_at`, `usu_nivel`, `usu_foto`, `usu_foto_de_fundo`) VALUES
-(9, 'Luís Felipe Giacomelli Rodrigues', 'lfgiacomellirodrigues@gmail.com', '$2y$10$IB4ZjF8udOHS15Zwoou9NOq.A2cIuxEARLBqFhv9YgiK7pbalZ7UO', '2024-12-05 00:54:17', '2025-01-20 06:46:35', 'admin', 'https://github.com/smithgg415.png', 'https://wallpapers.com/images/hd/programming-a-laptop-wuze1bxup48cr0bs.jpg'),
+(9, 'Luís Felipe Giacomelli Rodrigues', 'lfgiacomellirodrigues@gmail.com', '$2y$10$w22Bk2TIzvxGCshtXTCHB..pkobg/cq2dAMTQZdmPBhcdOI.nQx6a', '2024-12-05 00:54:17', '2025-01-23 01:50:23', 'admin', 'https://github.com/smithgg415.png', 'https://thumbs.dreamstime.com/b/wallpaper-t%C3%A9cnico-do-c%C3%B3digo-de-programa%C3%A7%C3%A3o-hacker-rolagem-verde-anima%C3%A7%C3%A3o-fundo-291708501.jpg'),
 (11, 'Ana paula de oliveira giacomelli', 'paulagiacomelli@hotmail.com', '$2y$10$CKv.uFMD5qE1keBe/sfD.eZNAnjFxqLc.IW5QfeKWYkzfz4q6EWdO', '2024-12-05 02:04:45', '2025-01-17 00:41:44', 'admin', NULL, NULL),
 (12, 'Fernando', 'luisfernandomachadorodrigues4@gmail.com', '$2y$10$xKGwmOGgGQaY9x9.4rEi0.1YwPXFo36rPPJcqHRVeWiTk9Fi56ndG', '2024-12-05 02:06:28', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
 (13, 'João Silva', 'joao.silva@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
 (14, 'Maria Oliveira', 'maria.oliveira@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
 (15, 'Pedro Santos', 'pedro.santos@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
-(16, 'Ana Costa', 'ana.costa@email.com', '$2y$10$jzgu6q0txJ3kRCvgbF.VregOG7d/2HznsbEjyiGIEPQIpQCFSNTBK', '2024-12-30 02:26:49', '2025-01-20 06:50:05', 'usuário', 'https://static.stealthelook.com.br/wp-content/uploads/2023/11/mulher-negra-carol-figueiredo-cabelo-natural-20231127160756.jpg', 'https://t4.ftcdn.net/jpg/06/91/93/83/360_F_691938377_4Ef8yFN6qe5utahlY934XfXwvEW5rpez.jpg'),
 (17, 'Lucas Almeida', 'lucas.almeida@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
 (18, 'Fernanda Lima', 'fernanda.lima@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
-(19, 'Bruno Pereira', 'bruno.pereira@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
-(20, 'Carla Rocha', 'carla.rocha@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
+(19, 'Bruno Pereira', 'bruno.pereira@email.com', '$2y$10$FAI0Vg9WieoNkkGCM0E2gu4NAEOzTxY5WvJQhZUUNuNurSmX8KPPC', '2024-12-30 02:26:49', '2025-01-23 01:54:47', 'usuario', 'https://www.creativefabrica.com/wp-content/uploads/2023/06/29/Profile-Photo-Professional-Business-Man-In-Suit-73311054-1.png', 'https://wallpapers.com/images/hd/accounting-background-b5jiod0mfbngcb7w.jpg'),
+(20, 'Carla Rocha', 'carla.rocha@email.com', '$2y$10$dFCFUDXP.R5oIxqacvYRxuuzwRmjYREm09USqf8Ze0IdNyaAd/y0C', '2024-12-30 02:26:49', '2025-01-23 01:51:13', 'usuario', NULL, NULL),
 (21, 'Rafael Mendes', 'rafael.mendes@email.com', 'senha123', '2024-12-30 02:26:49', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
 (22, 'Juliana Ferreira', 'juliana.ferreira@email.com', '$2y$10$j4I0GapCSbd0cZumq.4gJ.8FgfKMeVfYL1f2rDqtg25Bzu4KhDfIy', '2024-12-30 02:26:49', '2025-01-17 00:41:44', 'admin', NULL, NULL),
 (26, 'smith', 'pedo@gmail.com', '$2y$10$bR0b83aCsymqJ6Wq0p8Kce8qxFN4IzQRmIf6bNOCFExJEnZdDDMuG', '2025-01-03 03:58:04', '2025-01-17 21:28:42', 'usuário', NULL, NULL),
@@ -146,7 +145,7 @@ INSERT INTO `usuarios` (`usu_codigo`, `usu_nome`, `usu_email`, `usu_senha`, `cre
 (29, 'Paula giacomelli', 'paula@email.com', '$2y$10$fk1TB7q7fLt3J1RZZT2MUOReQGMLtylkwPBrHz452dXDz67wTfw6.', '2025-01-17 21:32:58', '2025-01-17 21:53:00', 'admin', NULL, NULL),
 (30, 'Ana Paula de Oliveira Giacomelli', 'paula1@gmail.com', '$2y$10$N/9yQAvjYeKuzOioyGny7ehO4/8RyWRqLz6UpPC2XKTWinuYMS2r6', '2025-01-17 21:56:21', '2025-01-17 21:56:55', 'admin', NULL, NULL),
 (31, 'Pedro Costa', 'pedrocosta@email.com', '$2y$10$WnJMWHd2vQH..LYPAKtRPu2PxPbBRVrKP73y42z8a5vhzS22F8Nbm', '2025-01-18 22:01:12', '2025-01-18 22:01:12', 'admin', NULL, NULL),
-(32, 'Ana Paula de Oliveira Giacomelli', 'paulaemail@email.com', '$2y$10$TuqIlCv1y0YubAzeO9TZhue/.k1U7mlSlcEUys45uV.6.TibQ7ADC', '2025-01-18 22:02:13', '2025-01-18 22:02:13', 'usuário', NULL, NULL);
+(32, 'Ana Paula de Oliveira Giacomelli', 'paulagiacomelli@email.com', '$2y$10$0L6OgVHbCJ/bpfvutm7uluUylNEXVR6NAOgIgeV6XTSNbiheDu8Ue', '2025-01-18 22:02:13', '2025-01-23 01:51:34', 'usuario', NULL, NULL);
 
 --
 -- Índices para tabelas despejadas
@@ -188,13 +187,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `anuncios`
 --
 ALTER TABLE `anuncios`
-  MODIFY `anu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `anu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `com_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `com_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT de tabela `noticias`
@@ -206,7 +205,7 @@ ALTER TABLE `noticias`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `usu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `usu_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- Restrições para tabelas despejadas
