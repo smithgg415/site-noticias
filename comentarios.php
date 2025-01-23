@@ -4,7 +4,7 @@ require 'bd/conexao.php';
 
 $conexao = conexao::getInstance();
 $sql = "
-    SELECT c.*, u.usu_nome 
+    SELECT c.*, u.usu_nome, u.usu_foto
     FROM comentarios c
     JOIN usuarios u ON c.usu_codigo = u.usu_codigo
     WHERE c.not_codigo = :not_codigo ORDER BY c.com_criadoem DESC
@@ -199,9 +199,23 @@ $noticia = $stm->fetch(PDO::FETCH_OBJ);
             <div class="comment-card">
                 <div class="comment-header">
                     <?php if ($comentario->usu_codigo == $_SESSION['id']) : ?>
-                        <a href="perfil.php" class="link_user"><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong></a>
+                        <a href="perfil.php" class="link_user">
+                            <?php if (empty($comentario->usu_foto)) : ?>
+                                <img src="img/perfil-padrao.png" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                            <?php else : ?>
+                                <img src="<?= $comentario->usu_foto ?>" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                            <?php endif; ?>
+                            <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
+                        </a>
                     <?php else : ?>
-                        <a href="userAccount.php?id=<?= $comentario->usu_codigo ?>" class="link_user"><strong><?= htmlspecialchars($comentario->usu_nome) ?></strong></a>
+                        <a href="userAccount.php?id=<?= $comentario->usu_codigo ?>" class="link_user">
+                            <?php if (empty($comentario->usu_foto)) : ?>
+                                <img src="img/perfil-padrao.png" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                            <?php else : ?>
+                                <img src="<?= $comentario->usu_foto ?>" alt="<?= htmlspecialchars($comentario->usu_nome) ?>" class="rounded-circle" width="30">
+                            <?php endif; ?>
+                            <strong><?= htmlspecialchars($comentario->usu_nome) ?></strong>
+                        </a>
                     <?php endif; ?>
                     <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
                         <button class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</button>
