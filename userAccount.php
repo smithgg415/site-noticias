@@ -1,5 +1,5 @@
 <?php
-require 'bd/conexao.php'; // Arquivo de conexão com o banco
+require 'bd/conexao.php'; 
 
 if (!isset($_GET['id'])) {
     die("Usuário não especificado.");
@@ -39,6 +39,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de <?= htmlspecialchars($usuario['usu_nome']) ?> - InfoNews</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
         body {

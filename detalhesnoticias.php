@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo, c.usu_codigo, u.usu_foto
+    $sqlComentarios = 'SELECT c.com_codigo, c.com_conteudo, c.com_criadoem, u.usu_nome, u.usu_codigo, c.usu_codigo, u.usu_foto, c.com_updated_at
                     FROM comentarios c 
                     JOIN usuarios u ON c.usu_codigo = u.usu_codigo 
                     WHERE c.not_codigo = :not_codigo
@@ -57,6 +57,7 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
     <title><?= htmlspecialchars($noticia->not_titulo) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <style>
         .card {
             border-radius: 10px;
@@ -233,7 +234,6 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
             transition: all 0.3s ease;
         }
 
-        /* Cor de fundo para os ícones */
         .share-button.facebook {
             background-color: #3b5998;
         }
@@ -246,7 +246,6 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
             background-color: #25d366;
         }
 
-        /* Efeito de hover */
         .share-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
@@ -420,24 +419,27 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
                                 <?php endif; ?>
                                 : <?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?>
                             </p>
-                            <small class="text-muted"> Publicado em <?= date('d/m/Y', strtotime($comentario->com_criadoem)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?>
-                            </small>
-                            <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
-                                <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
-                                <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
-                                    <form method="POST" action="actioncomentario.php" style="margin: 0;">
-                                        <input type="hidden" name="acao" value="editar">
-                                        <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
-                                        <button type="button" onclick="editComment(<?= $comentario->com_codigo ?>)">Editar</button>
-                                        <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
-                                    </form>
-                                    <form method="POST" action="actioncomentario.php" style="margin: 0;">
-                                        <input type="hidden" name="acao" value="excluir">
-                                        <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
-                                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este comentário?')">Excluir</button>
-                                    </form>
-                                </div>
-                            <?php endif; ?>
+                            <?php if ($comentario->com_updated_at != $comentario->com_criadoem): ?>
+                                <small class="text-muted"> Atualizado em <?= date('d/m/Y', strtotime($comentario->com_updated_at)) . " às " . date('H:i', strtotime($comentario->com_updated_at)) ?></small>
+                            <?php else: ?>
+                                <small class="text-muted"> Publicado em <?= date('d/m/Y', strtotime($comentario->com_criadoem)) . " às " . date('H:i', strtotime($comentario->com_criadoem)) ?>
+                                <?php endif; ?>
+                                <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $comentario->usu_codigo) : ?>
+                                    <span class="options-btn" onclick="toggleOptionsMenu(<?= $comentario->com_codigo ?>)">&#x22EE;</span>
+                                    <div id="options-menu-<?= $comentario->com_codigo ?>" class="options-menu">
+                                        <form method="POST" action="actioncomentario.php" style="margin: 0;">
+                                            <input type="hidden" name="acao" value="editar">
+                                            <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
+                                            <button type="button" onclick="editComment(<?= $comentario->com_codigo ?>)">Editar</button>
+                                            <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
+                                        </form>
+                                        <form method="POST" action="actioncomentario.php" style="margin: 0;">
+                                            <input type="hidden" name="acao" value="excluir">
+                                            <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
+                                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este comentário?')">Excluir</button>
+                                        </form>
+                                    </div>
+                                <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

@@ -70,7 +70,6 @@
             color: #ddd;
         }
 
-        /* Responsividade */
         @media (max-width: 768px) {
             footer .footer-links {
                 flex-direction: column;

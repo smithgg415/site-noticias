@@ -16,7 +16,7 @@ if (!$com_codigo) {
 }
 $not_codigo = filter_input(INPUT_GET, 'not_codigo', FILTER_VALIDATE_INT);
 $conexao = conexao::getInstance();
-$sql = 'SELECT * FROM comentarios WHERE com_codigo = :com_codigo';
+$sql = 'SELECT * FROM comentarios c WHERE c.com_codigo = :com_codigo';
 $stm = $conexao->prepare($sql);
 $stm->bindValue(':com_codigo', $com_codigo, PDO::PARAM_INT);
 $stm->execute();
@@ -47,6 +47,8 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <title>Editar Comentário</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -227,6 +229,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                         <form action="actioncomentario.php" method="post" class="mt-4">
                             <input type="hidden" name="acao" value="excluir">
                             <input type="hidden" name="id" value="<?= $comentario->com_codigo ?>">
+                            <input type="hidden" name="not_codigo" value="<?= $comentario->not_codigo ?>">
                             <button type="submit" id="btn-delete" class="btn w-100 text-light" onclick="return confirm('Tem certeza que deseja excluir este comentário?')">
                                 <i class="bi-trash-fill"></i> Excluir Comentário
                             </button>
@@ -259,7 +262,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             document.getElementById('adSection').style.display = 'none';
         }
     </script>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

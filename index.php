@@ -485,6 +485,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         .btn-login:hover i {
             transform: translateX(5px);
         }
+
         .btn-logout {
             display: inline-flex;
             align-items: center;
@@ -492,7 +493,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             font-size: 0.9rem;
             font-weight: 600;
             color: #fff;
-            background-color:red;
+            background-color: red;
             border: none;
             border-radius: 30px;
             text-decoration: none;
@@ -506,7 +507,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         }
 
         .btn-logout:hover {
-            background: linear-gradient(45deg,red, #1C75FF);
+            background: linear-gradient(45deg, red, #1C75FF);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
@@ -763,14 +764,14 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             <?php foreach ($noticias as $noticia) : ?>
                 <div class="news-card">
                     <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" style="text-decoration:none;">
-                        <img src="<?= $noticia->not_imagem ?>" alt="">
+                        <img src="<?= $noticia->not_imagem ?>" alt="<?= $noticia->not_titulo ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($noticia->not_titulo) ?></h5>
                             <p class="card-text"><?= substr(htmlspecialchars($noticia->not_conteudo), 0, 100) ?>...</p>
                             <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" class="btn btn-primary">Leia Mais</a>
                         </div>
                         <div class="card-footer">
-                            <small>Publicado em <?= date('d/m/Y H:i', strtotime($noticia->not_publicado_em)) ?></small>
+                            <small> Publicado em <?= date('d/m/Y', strtotime($noticia->not_publicado_em)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?> | Por InfoNews</small>
                         </div>
 
                         <div class="card-footer mt-3">

@@ -9,7 +9,6 @@ if (!isset($_SESSION["logado099"]) || $_SESSION['nivel'] !== 'admin') {
 require 'bd/conexao.php';
 $conexao = conexao::getInstance();
 
-// Obter o ID da notícia
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
@@ -36,8 +35,9 @@ if ($id > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Notícia</title>
-    <!-- Bootstrap CSS -->
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -83,6 +83,12 @@ if ($id > 0) {
         .btn-back:hover {
             background-color: #5a6268;
         }
+        #btn-save{
+            background-color: #4b2a9b;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
     </style>
 </head>
 
@@ -118,7 +124,7 @@ if ($id > 0) {
                             <input type="text" id="imagem" name="imagem" class="form-control" value="<?= htmlspecialchars($noticia['not_imagem']); ?>">
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Salvar Alterações</button>
+                        <button type="submit" id="btn-save" class="btn w-100 mb-3">Salvar Alterações</button>
                         <a href="indexnoticia.php" class="btn btn-secondary w-100"><i class="fas fa-arrow-left"></i> Voltar</a>
                     </form>
                 </div>

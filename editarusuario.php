@@ -25,9 +25,8 @@ if (!$usuario) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome -->
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .close-button {
@@ -95,7 +94,7 @@ if (!$usuario) {
                                                 <i class="fas fa-users-cog me-2"></i>Nível
                                             </label>
                                             <select class="form-select" id="nivel" name="nivel" required>
-                                                <option value="admin" <?= $usuario['usu_nivel'] == 'admin' ? 'selected' : '' ?>>Admin</option>
+                                                <option value="admin" <?= $usuario['usu_nivel'] == 'admin' ? 'selected' : '' ?>>Administrador</option>
                                                 <option value="usuario" <?= $usuario['usu_nivel'] == 'usuario' ? 'selected' : '' ?>>Usuário</option>
                                             </select>
                                         </div>
@@ -124,7 +123,7 @@ if (!$usuario) {
                                     color:transparent;
                                     
                                     ">Desenvolvedora de Software</h2>
-                                    <img src="https://nutriflow.netlify.app/logos/giacomellilogo.png" alt="Pré-visualização da Imagem" class="img-fluid">
+                                    <img src="img/giacomellidevs.png" alt="Pré-visualização da Imagem" class="img-fluid">
                                 </div>
                             </div>
                         </div>

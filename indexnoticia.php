@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $searchTerm = $_POST['search'] ?? '';
 }
 
-// Administradores
 $sqlUsuariosAdmin = 'SELECT * FROM usuarios WHERE usu_nivel = "admin"';
 if (!empty($searchTerm)) {
     $sqlUsuariosAdmin .= ' AND usu_nome LIKE :search';
@@ -28,7 +27,6 @@ if (!empty($searchTerm)) {
 $stmUsuariosAdmin->execute();
 $usuariosAdmin = $stmUsuariosAdmin->fetchAll(PDO::FETCH_ASSOC);
 
-// Usuários
 $sqlUsuarios = 'SELECT * FROM usuarios WHERE usu_nivel = "usuario"';
 if (!empty($searchTerm)) {
     $sqlUsuarios .= ' AND usu_nome LIKE :search';
@@ -41,7 +39,6 @@ if (!empty($searchTerm)) {
 $stmUsuarios->execute();
 $usuarios = $stmUsuarios->fetchAll(PDO::FETCH_ASSOC);
 
-// Notícias
 $sqlNoticias = 'SELECT * FROM noticias';
 if (!empty($searchTerm)) {
     $sqlNoticias .= ' WHERE not_titulo LIKE :search';
@@ -78,6 +75,7 @@ $stm->execute();
     <title>Painel Administrativo</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/stylepainel.css">
     <style>

@@ -33,6 +33,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil | <?= htmlspecialchars($usuario->usu_nome) ?></title>
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
@@ -1077,7 +1078,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                                             <input type="text" class="form-control" name="foto" id="foto" value="<?= $usuario->usu_foto ?>">
                                         </div>
                                         <div clsas="mb-3">
-                                            <label for="foto de fundo">Foto de Fundo:</label>
+                                            <label for="foto de fundo" class="form-label">Foto de Fundo:</label>
                                             <input type="text" class="form-control" name="foto_de_fundo" id="foto_de_fundo" value="<?= $usuario->usu_foto_de_fundo ?>">
                                         </div>
                                         <button type="submit" class="btn btn-primary" id="saveBtn">Salvar</button>
@@ -1195,7 +1196,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         cameraIcon.addEventListener('click', function() {
             uploadModal.show();
         });
-        const cameraIconBackground = document.querySelector('.camera-icon-background'); // Usando a classe correta
+        const cameraIconBackground = document.querySelector('.camera-icon-background');
         const uploadModalBackground = new bootstrap.Modal(document.getElementById('uploadModalBackground'));
         cameraIconBackground.addEventListener('click', function() {
             uploadModalBackground.show();

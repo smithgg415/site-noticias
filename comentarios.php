@@ -29,6 +29,7 @@ $noticia = $stm->fetch(PDO::FETCH_OBJ);
     <title>Comentários de <?= htmlspecialchars($noticia->not_titulo) ?></title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -234,7 +235,11 @@ $noticia = $stm->fetch(PDO::FETCH_OBJ);
                     <?php endif; ?>
                 </div>
                 <p><?= nl2br(htmlspecialchars($comentario->com_conteudo)) ?></p>
-                <small class="text-muted">Publicado em <?= date('d/m/Y H:i', strtotime($comentario->com_criadoem)) ?></small>
+                <?php if ($comentario->com_updated_at != $comentario->com_criadoem): ?>
+                    <small class="text-muted"> Atualizado em <?= date('d/m/Y', strtotime($comentario->com_updated_at)) . " às " . date('H:i', strtotime($comentario->com_updated_at)) ?></small>
+                <?php else: ?>
+                    <small class="text-muted"> Publicado em <?= date('d/m/Y', strtotime($comentario->com_criadoem)) . " às " . date('H:i', strtotime($comentario->com_criadoem)) ?>
+                    <?php endif; ?>
             </div>
         <?php endforeach; ?>
 
@@ -259,7 +264,9 @@ $noticia = $stm->fetch(PDO::FETCH_OBJ);
             </div>
         <?php endif; ?>
     </div>
-
+    <div class="footer">
+        <?php include 'footer.php'; ?>
+    </div>
     <script>
         function toggleOptionsMenu(id) {
             const menu = document.getElementById(`options-menu-${id}`);

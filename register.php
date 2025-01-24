@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuário</title>
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
@@ -134,7 +135,7 @@
                             <i id="eye-icon" class="bi bi-eye"></i>
                         </span>
                     </div>
-                    <input type="hidden" name="nivel" value="usuario">
+                    <input type="hidden" name="nivel" value="usuário">
                     <input type="hidden" name="acao" value="incluir">
                     <button type="submit" class="btn btn-primary w-100">Registrar</button>
                 </form>

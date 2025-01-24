@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ações de Comentários</title>
-    <!-- Link CSS Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" href="css/custom.css">
 </head>
+
 <body>
     <?php
     session_start();
     require 'bd/conexao.php';
 
-    // Conexão com o banco de dados
     $conexao = conexao::getInstance();
 
-    // Recupera os dados enviados via POST
     $acao = filter_input(INPUT_POST, 'acao', FILTER_SANITIZE_STRING);
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $conteudo = trim(filter_input(INPUT_POST, 'conteudo', FILTER_SANITIZE_STRING));
@@ -59,19 +58,31 @@
     }
 
     if ($acao == 'editar') {
-        $sql = 'UPDATE comentarios SET com_conteudo = :conteudo WHERE com_codigo = :id';
+        $sql = 'SELECT not_codigo FROM comentarios WHERE com_codigo = :id';
         $stm = $conexao->prepare($sql);
-        $stm->bindValue(':conteudo', $conteudo);
         $stm->bindValue(':id', $id);
-        $retorno = $stm->execute();
+        $stm->execute();
+        $resultado = $stm->fetch(PDO::FETCH_ASSOC);
 
-        if ($retorno) {
-            echo "<meta http-equiv='refresh' content='0;URL=index.php'>";
+        if ($resultado) {
+            $not_codigo = $resultado['not_codigo'];
+            $sql = 'UPDATE comentarios SET com_conteudo = :conteudo WHERE com_codigo = :id';
+            $stm = $conexao->prepare($sql);
+            $stm->bindValue(':conteudo', $conteudo);
+            $stm->bindValue(':id', $id);
+            $retorno = $stm->execute();
+
+            if ($retorno) {
+                echo "<meta http-equiv='refresh' content='0;URL=detalhesnoticias.php?id=$not_codigo'>";
+            } else {
+                echo "<div class='alert alert-danger' role='alert'>Erro ao editar o comentário!</div>";
+                echo "<meta http-equiv='refresh' content='2;URL=editarcomentario.php?id=$id'>";
+            }
         } else {
-            echo "<div class='alert alert-danger' role='alert'>Erro ao editar o comentário!</div>";
-            echo "<meta http-equiv='refresh' content='2;URL=editarcomentario.php?id=$com_codigo'>";
+            echo "<div class='alert alert-danger' role='alert'>Erro: Comentário não encontrado!</div>";
         }
     }
+
 
     if ($acao == 'excluir') {
         $sql = 'DELETE FROM comentarios WHERE com_codigo = :id';
@@ -88,4 +99,5 @@
     }
     ?>
 </body>
+
 </html>
