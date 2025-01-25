@@ -669,57 +669,139 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         .titulo-noticias {
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding-top: 1rem;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar.hidden {
+            transform: translateX(100%);
+        }
+
+        .sidebar a {
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 10px;
+            text-decoration: none;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar i {
+            font-size: 1.4rem;
+            margin-right: 15px;
+        }
+
+        .main-content {
+            margin-right: 250px;
+            padding: 20px;
+            transition: margin-right 0.3s;
+            width: 100%;
+        }
+
+        .sidebar.hidden+.main-content {
+            margin-right: 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-right: 0;
+            }
+        }
+
+        #topBar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            color: white;
+            padding: 12px 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            justify-content: space-between;
+        }
+
+        #topBar h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .toggle-btn i {
+            transition: transform 0.3s ease, content 0.3s ease;
+        }
+
+        .toggle-btn:hover i::before {
+            content: "\F12F";
+            font-family: "bootstrap-icons";
+        }
+
+        .close-sidebar:hover i::before {
+            content: "\F138";
+            font-family: "bootstrap-icons";
+        }
     </style>
 
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top shadow">
-        <div class="container">
-            <a class="navbar-brand text-white fw-bold" href="#">
-                <i class="bi bi-newspaper"></i> InfoNews
-            </a>
-            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="bi bi-list"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <?php if ($_SESSION['nivel'] === "admin") : ?>
-                        <li class="nav-item">
-                            <a href="indexnoticia.php" class="btn-controle">
-                                <i class="bi bi-tools"></i> Controle
-                            </a>
-                        </li>
-                    <?php else : ?>
-                        <li class="nav-item">
-                            <a href="index.php" class="btn-home">
-                                <i class="bi bi-house-door"></i> Home
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                    <?php if ($_SESSION['logado099']) : ?>
-                        <li class="nav-item">
-                            <a href="perfil.php" class="btn-account">
-                                <i class="bi bi-person"></i> Conta
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                    <li class="nav-item">
-                        <?php if ($_SESSION['logado099']) : ?>
-                            <a href="logout.php" class="btn-logout">
-                                <i class="bi bi-box-arrow-right"></i> Sair
-                            </a>
-                        <?php else : ?>
-                            <a href="login.php" class="btn-login">
-                                <i class="bi bi-box-arrow-in-right"></i> Login
-                            </a>
-                        <?php endif; ?>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    <div class="container-fluid" id="topBar">
+        <h3>
+            <i class="bi bi-envelope"></i>
+            INFONEWS
+        </h3>
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
 
     <div class="container-fluid">
         <div class="row">
@@ -821,7 +903,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         </div>
     <?php endforeach; ?>
     </div>
-    </div>
 
     <footer>
         <div class="footer-header">
@@ -877,7 +958,29 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             <a href="#" style="color: #a8a8ff; text-decoration: none;">Política de Privacidade</a>
         </div>
     </footer>
+    <div class="sidebar hidden" id="sidebar">
+        <a href="#" onclick="toggleSidebar()" class="close-sidebar">
+            <i class="bi bi-x-lg"></i> Fechar
+        </a>
+        <hr style="color: white;">
+        <a href="index.php" class="btn-home mt-3"><i class="bi bi-house-door"></i> Home</a>
+        <?php if ($_SESSION['nivel'] === "admin") : ?>
+            <a href="indexnoticia.php" class="btn-controle"><i class="bi bi-tools"></i> Controle</a>
+        <?php endif; ?>
+        <?php if ($_SESSION['logado099']) : ?>
+            <a href="perfil.php" class="btn-account"><i class="bi bi-person"></i> Conta</a>
+            <a href="logout.php" class="btn-logout"><i class="bi bi-box-arrow-right"></i> Sair</a>
+        <?php else : ?>
+            <a href="login.php" class="btn-login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+        <?php endif; ?>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("hidden");
+            document.getElementById("sidebar").classList.toggle("active");
+        }
+    </script>
 </body>
 
 </html>
