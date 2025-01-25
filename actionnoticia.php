@@ -78,7 +78,7 @@ if ($acao == 'excluir') {
 
     if ($retorno) {
         $_SESSION['mensagem'] = 'Notícia excluída com sucesso!';
-        header('Location: index.php');
+        header('Location: indexnoticia.php');
         exit;
     } else {
         echo "<div class='alert alert-danger' role='alert'>Erro ao excluir notícia!</div>";

@@ -30,6 +30,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <title>Painel de Notícias</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="website icon" href="img/logoinfonews.jpg" type="png">
     <link rel="stylesheet" href="css/footer.css">
     <style>
@@ -203,28 +204,50 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         ?>@keyframes slideInLeft {
             from {
                 transform: translateX(-100%);
+                opacity: 0;
             }
 
             to {
                 transform: translateX(0);
-                transition: 0.8s linear;
+                opacity: 1;
             }
         }
 
         @keyframes slideInRight {
             from {
                 transform: translateX(100%);
+                opacity: 0;
             }
 
             to {
                 transform: translateX(0);
-                transition: 0.8s linear;
+                opacity: 1;
+            }
+        }
+
+        @keyframes borderAnimation {
+            0% {
+                clip-path: inset(0 100% 100% 0);
+            }
+
+            25% {
+                clip-path: inset(0 0 100% 0);
+            }
+
+            50% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            75% {
+                clip-path: inset(100% 0 0 0);
+            }
+
+            100% {
+                clip-path: inset(0 0 0 0);
             }
         }
 
         .last-news {
-            margin-top: 65px;
-            margin-left: 70px;
             position: relative;
             background-image: url('<?= $noticia->not_imagem ?>');
             background-size: cover;
@@ -241,30 +264,41 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             transition: all 0.3s ease-in-out;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            padding-left: 20px;
-            padding-bottom: 20px;
+            padding: 20px;
             animation: slideInLeft 0.8s ease-out;
-        }
-
-        @media (max-width: 768px) {
-            .last-news {
-                margin-top: 55px;
-                margin-left: 0;
-                height: 500px;
-                animation: slideInLeft 0.7s ease-out;
-            }
+            overflow: hidden;
+            margin: 65px 70px 0 70px;
         }
 
         .last-news::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
             transition: all 0.3s ease-in-out;
+        }
+
+        .last-news::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            animation: none;
+        }
+
+        .last-news:hover::after {
+            border-color: white;
+            animation: borderAnimation 1.5s linear forwards;
+        }
+
+        .last-news:hover {
+            transform: scale(1.05);
+        }
+
+        .last-news:hover::before {
+            background: rgba(0, 0, 0, 0.6);
         }
 
         .last-news h1 {
@@ -286,16 +320,8 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             transition: width 0.7s ease-out;
         }
 
-        .last-news:hover {
-            transform: scale(1.05);
-        }
-
         .last-news:hover h1 {
             transform: translateY(-10px);
-        }
-
-        .last-news:hover::before {
-            background: rgba(0, 0, 0, 0.6);
         }
 
         .last-news:hover h1::after {
@@ -307,8 +333,14 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
         }
 
-        .last-news img {
-            border-radius: 15px;
+        .last-published {
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
         .square-news {
@@ -317,13 +349,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             gap: 25px;
             padding: 0 20px;
             animation: slideInRight 0.8s ease-out;
-        }
-
-        @media (max-width: 768px) {
-            .square-news {
-                padding: 0 15px;
-                animation: slideInRight 0.8s ease-out;
-            }
         }
 
         .news-card {
@@ -338,6 +363,11 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             position: relative;
         }
 
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
         .news-card img {
             width: 100%;
             height: 220px;
@@ -345,6 +375,10 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
             transition: transform 0.3s ease-in-out;
+        }
+
+        .news-card:hover img {
+            transform: scale(1.05);
         }
 
         .card-body {
@@ -365,6 +399,10 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             transition: color 0.3s ease-in-out;
         }
 
+        .news-card:hover .card-title {
+            color: #007bff;
+        }
+
         .card-text {
             font-size: 1rem;
             color: #666;
@@ -375,21 +413,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             color: #007bff;
         }
 
-        .news-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .news-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .news-card:hover .card-title {
-            color: #007bff;
-        }
-
         .news-card .btn-primary {
-            background-color: #007bff;
             color: white;
             padding: 12px 24px;
             text-decoration: none;
@@ -409,7 +433,9 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             position: absolute;
             top: 15px;
             right: 15px;
-            background-color: #007bff;
+            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
+            font-weight: bold;
+            text-transform: uppercase;
             color: white;
             font-size: 0.9rem;
             padding: 8px 15px;
@@ -424,6 +450,12 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         }
 
         @media (max-width: 768px) {
+            .last-news {
+                height: 400px;
+                font-size: 16px;
+                margin: 30px 15px 0 15px;
+            }
+
             .news-card img {
                 height: 180px;
             }
@@ -435,25 +467,6 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             .card-title {
                 font-size: 1.2rem;
             }
-        }
-
-        .click-to-more {
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background-color 0.3s ease-in-out;
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-        }
-
-        .last-published {
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            position: absolute;
-            top: 20px;
-            right: 20px;
         }
 
 
@@ -713,6 +726,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                         <h1><?= $ultimaNoticia->not_titulo ?></h1>
 
                         <div class="last-published">
+                            <i class="fa-solid fa-envelope-open"> </i>
                             Última notícia publicada!
                         </div>
                     </div>
@@ -740,6 +754,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                                 border-bottom: 1px solid #007bff;
                                 transition: transform 0.3s ease-in-out;">
                                     <div class="click-to-more">
+                                        <i class="fa-solid fa-circle-info"> </i>
                                         Clique para mais
                                     </div>
                                 </div>
