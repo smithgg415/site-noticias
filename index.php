@@ -449,7 +449,18 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
             background-color: #0056b3;
         }
 
+
         @media (max-width: 768px) {
+            .news-card {
+                width: 320px;
+            }
+
+            .square-news {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
             .last-news {
                 height: 400px;
                 font-size: 16px;
