@@ -83,7 +83,8 @@ if ($id > 0) {
         .btn-back:hover {
             background-color: #5a6268;
         }
-        #btn-save{
+
+        #btn-save {
             background-color: #4b2a9b;
             color: white;
             border-radius: 8px;
@@ -123,7 +124,20 @@ if ($id > 0) {
                             <label for="imagem"><i class="fas fa-image"></i> URL da Imagem:</label>
                             <input type="text" id="imagem" name="imagem" class="form-control" value="<?= htmlspecialchars($noticia['not_imagem']); ?>">
                         </div>
-
+                        <div class="form-group mb-3">
+                            <label for="categoria"><i class="fas fa-list"></i> Categoria:</label>
+                            <select name="categoria" class="form-control">
+                                <option value="<?= $noticia['not_categoria']; ?>"><?= $noticia['not_categoria']; ?></option>
+                                <option value="Política">Política</option>
+                                <option value="Economia">Economia</option>
+                                <option value="Esportes">Esportes</option>
+                                <option value="Entretenimento">Entretenimento</option>
+                                <option value="Saúde">Saúde</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                                <option value="Ciência">Ciência</option>
+                                <option value="Mundo">Mundo</option>
+                            </select>
+                        </div>
                         <button type="submit" id="btn-save" class="btn w-100 mb-3">Salvar Alterações</button>
                         <a href="indexnoticia.php" class="btn btn-secondary w-100"><i class="fas fa-arrow-left"></i> Voltar</a>
                     </form>

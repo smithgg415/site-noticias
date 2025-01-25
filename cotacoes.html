@@ -1,0 +1,113 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API de Cotações</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+        padding: 0;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin-top: 50px;
+    }
+
+    .quote-card {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        text-align: center;
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+    }
+
+    .quote-card:hover {
+        transform: scale(1.05);
+    }
+
+    .quote-card h3 {
+        font-size: 28px;
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+
+    .quote-card .value {
+        font-size: 40px;
+        font-weight: 700;
+        color: #00d1b2;
+    }
+
+    .quote-card .currency {
+        font-size: 22px;
+        margin-top: 10px;
+        color: #b8b8b8;
+    }
+
+    .quote-card .icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+        color: #00d1b2;
+    }
+
+    .error {
+        color: #ff4d4d;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .quote-card {
+            padding: 20px;
+        }
+
+        .quote-card h3 {
+            font-size: 24px;
+        }
+
+        .quote-card .value {
+            font-size: 32px;
+        }
+
+        .quote-card .currency {
+            font-size: 18px;
+        }
+
+        .quote-card .icon {
+            font-size: 40px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div id="dollar" class="quote-card">
+                <i class="fas fa-dollar-sign icon"></i>
+                <h3>Dólar</h3>
+                <div class="value">Carregando...</div>
+                <div class="currency">R$ 0,00</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div id="bitcoin" class="quote-card">
+                <i class="fab fa-bitcoin icon"></i>
+                <h3>Bitcoin</h3>
+                <div class="value">Carregando...</div>
+                <div class="currency">R$ 0,00</div>
+            </div>
+        </div>
+    </div>
+    <div id="error" class="error"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="js/Bitcoin-DolarAPI.js"></script>

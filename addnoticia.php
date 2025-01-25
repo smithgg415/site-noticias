@@ -33,7 +33,7 @@
 </head>
 
 <body class="bg-light">
-<?php include 'header.php'; ?>
+    <?php include 'header.php'; ?>
 
     <div class="container-fluid py-5">
         <div class="row justify-content-center">
@@ -44,6 +44,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
+                            <!-- Formulário à esquerda -->
                             <div class="col-lg-6 col-md-6">
                                 <form action="actionnoticia.php" method="post" id="form-noticia" enctype='multipart/form-data'>
                                     <div class="mb-3">
@@ -66,6 +67,21 @@
                                         </label>
                                         <input type="text" class="form-control" id="imagem" name="imagem" placeholder="Informe a URL da imagem" required>
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="categoria" class="form-label">Categoria da notícia</label>
+                                        <select id="categoria" name="categoria" class="form-control">
+                                            <option value="null">Selecione uma categoria</option>
+                                            <option value="Política">Política</option>
+                                            <option value="Economia">Economia</option>
+                                            <option value="Esportes">Esportes</option>
+                                            <option value="Tecnologia">Tecnologia</option>
+                                            <option value="Entretenimento">Entretenimento</option>
+                                            <option value="Saúde">Saúde</option>
+                                            <option value="Ciência">Ciência</option>
+                                            <option value="Mundo">Mundo</option>
+                                        </select>
+                                    </div>
+
 
                                     <div class="mb-3">
                                         <label for="data-publicacao" class="form-label">

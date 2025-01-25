@@ -847,10 +847,18 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                                 border-top-right-radius: 15px;
                                 border-bottom: 1px solid #007bff;
                                 transition: transform 0.3s ease-in-out;">
-                                    <div class="click-to-more">
-                                        <i class="fa-solid fa-circle-info"> </i>
-                                        Clique para mais
-                                    </div>
+                                    <?php
+                                    if ($news->not_categoria == NULL) : ?>
+                                        <div class="click-to-more">
+                                            <i class="fa-solid fa-circle-info"> </i>
+                                            Clique para mais
+                                        </div>
+                                    <?php else : ?>
+                                        <div class="click-to-more">
+                                            <i class="fa-solid fa-circle-info"> </i>
+                                            <?= $news->not_categoria ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title"><?= htmlspecialchars($news->not_titulo) ?></h5>
@@ -866,9 +874,9 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <h2 class="titulo-noticias">Previsão do tempo:</h2>
     <?php include "clima-atual.html"; ?>
     <?php include "carrossel_anuncios.php"; ?>
-    <h2 class="titulo-noticias">Últimas notícias:</h2>
-
+    
     <div class="container mt-5">
+        <h2 class="titulo-noticias">Últimas notícias:</h2>
         <div class="news-container">
             <?php foreach ($noticias as $noticia) : ?>
                 <div class="news-card">
@@ -899,10 +907,11 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                                     <a href="login.php" class="login-link"><i class="bi bi-box-arrow-in-right icon"></i> <b>Faça login</b> para comentar.</a>
                                 </div>
                             <?php endif; ?>
+                        </div>
                     </a>
                 </div>
+            <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
     </div>
 
     <footer>
@@ -960,7 +969,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
         </div>
     </footer>
     <div class="sidebar hidden" id="sidebar">
-        <a href="#" onclick="toggleSidebar()" class="close-sidebar">
+        <a href="javascript:void(0)" onclick="toggleSidebar()" class="close-sidebar">
             <i class="bi bi-x-lg"></i> Fechar
         </a>
         <hr style="color: white;">

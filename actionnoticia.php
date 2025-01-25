@@ -14,6 +14,7 @@ $id = isset($_POST['id']) ? $_POST['id'] : '';
 $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
 $conteudo = isset($_POST['conteudo']) ? $_POST['conteudo'] : '';
 $imagem = isset($_POST['imagem']) ? $_POST['imagem'] : '';
+$categoria = isset($_POST['categoria']) && $_POST['categoria'] !== '' ? $_POST['categoria'] : NULL;
 $mensagem = '';
 
 if ($acao != 'excluir') {
@@ -31,12 +32,20 @@ if ($acao != 'excluir') {
 }
 
 if ($acao == 'incluir') {
-    $sql = 'INSERT INTO noticias (not_titulo, not_conteudo, not_imagem, not_autor_codigo) VALUES (:titulo, :conteudo, :imagem, :autor_codigo)';
+    $sql = 'INSERT INTO noticias (not_titulo, not_conteudo, not_imagem, not_autor_codigo, not_categoria) 
+            VALUES (:titulo, :conteudo, :imagem, :autor_codigo, :categoria)';
     $stm = $conexao->prepare($sql);
     $stm->bindValue(':titulo', $titulo);
     $stm->bindValue(':conteudo', $conteudo);
     $stm->bindValue(':imagem', $imagem);
     $stm->bindValue(':autor_codigo', $_SESSION['id']);
+
+    if ($categoria === NULL) {
+        $stm->bindValue(':categoria', NULL, PDO::PARAM_NULL);
+    } else {
+        $stm->bindValue(':categoria', $categoria, PDO::PARAM_STR);
+    }
+
     $retorno = $stm->execute();
 
     if ($retorno) {
@@ -51,16 +60,23 @@ if ($acao == 'incluir') {
 }
 
 if ($acao == 'editar') {
-    $sql = 'UPDATE noticias SET not_titulo=:titulo, not_conteudo=:conteudo, not_imagem=:imagem WHERE not_codigo=:id';
+    $sql = 'UPDATE noticias SET not_titulo=:titulo, not_conteudo=:conteudo, not_imagem=:imagem, not_categoria=:categoria WHERE not_codigo=:id';
     $stm = $conexao->prepare($sql);
     $stm->bindValue(':titulo', $titulo);
     $stm->bindValue(':conteudo', $conteudo);
     $stm->bindValue(':imagem', $imagem);
+
+    if ($categoria === NULL) {
+        $stm->bindValue(':categoria', NULL, PDO::PARAM_NULL);
+    } else {
+        $stm->bindValue(':categoria', $categoria, PDO::PARAM_STR);
+    }
+
     $stm->bindValue(':id', $id);
     $retorno = $stm->execute();
 
     if ($retorno) {
-        $_SESSION['mensagem'] = '';
+        $_SESSION['mensagem'] = 'Notícia editada com sucesso!';
         header('Location: indexnoticia.php');
         exit;
     } else {
@@ -86,4 +102,3 @@ if ($acao == 'excluir') {
         exit;
     }
 }
-?>
