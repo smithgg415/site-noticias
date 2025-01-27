@@ -1,996 +1,368 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['logado099'])) {
-    $_SESSION['logado099'] = false;
-    $_SESSION['id'] = 0;
-    $_SESSION['nome'] = "Visitante";
-    $_SESSION['nivel'] = "usuario";
+if (!isset($_SESSION["logado099"]) || $_SESSION["logado099"] !== true || $_SESSION["nivel"] !== "admin") {
+    header("Location: index.php");
+    exit;
 }
 
-require "bd/conexao.php";
+require 'bd/conexao.php';
 $conexao = conexao::getInstance();
 
-$sqlNoticias = 'SELECT * FROM noticias ORDER BY not_publicado_em DESC';
+$searchTerm = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $searchTerm = $_POST['search'] ?? '';
+}
+
+$sqlUsuariosAdmin = 'SELECT * FROM usuarios WHERE usu_nivel = "admin"';
+if (!empty($searchTerm)) {
+    $sqlUsuariosAdmin .= ' AND usu_nome LIKE :search';
+}
+$sqlUsuariosAdmin .= ' ORDER BY usu_nome';
+$stmUsuariosAdmin = $conexao->prepare($sqlUsuariosAdmin);
+if (!empty($searchTerm)) {
+    $stmUsuariosAdmin->bindValue(':search', '%' . $searchTerm . '%');
+}
+$stmUsuariosAdmin->execute();
+$usuariosAdmin = $stmUsuariosAdmin->fetchAll(PDO::FETCH_ASSOC);
+
+$sqlUsuarios = 'SELECT * FROM usuarios WHERE usu_nivel = "usuario"';
+if (!empty($searchTerm)) {
+    $sqlUsuarios .= ' AND usu_nome LIKE :search';
+}
+$sqlUsuarios .= ' ORDER BY usu_nome';
+$stmUsuarios = $conexao->prepare($sqlUsuarios);
+if (!empty($searchTerm)) {
+    $stmUsuarios->bindValue(':search', '%' . $searchTerm . '%');
+}
+$stmUsuarios->execute();
+$usuarios = $stmUsuarios->fetchAll(PDO::FETCH_ASSOC);
+
+$sqlNoticias = 'SELECT * FROM noticias';
+if (!empty($searchTerm)) {
+    $sqlNoticias .= ' WHERE not_titulo LIKE :search';
+}
+$sqlNoticias .= ' ORDER BY not_publicado_em DESC';
 $stmNoticias = $conexao->prepare($sqlNoticias);
+if (!empty($searchTerm)) {
+    $stmNoticias->bindValue(':search', '%' . $searchTerm . '%');
+}
 $stmNoticias->execute();
-$noticias = $stmNoticias->fetchAll(PDO::FETCH_OBJ);
-$sql = 'SELECT * FROM anuncios ORDER BY anu_codigo DESC';
+$noticias = $stmNoticias->fetchAll(PDO::FETCH_ASSOC);
+$sql = 'SELECT * FROM anuncios';
 $stm = $conexao->prepare($sql);
 $stm->execute();
 $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
-?>
+if (!empty($searchTerm)) {
+    $sql .= ' WHERE anu_nome LIKE :search';
+}
+$sql .= ' ORDER BY anu_nome';
+$stm = $conexao->prepare($sql);
+if (!empty($searchTerm)) {
+    $stm->bindValue(':search', '%' . $searchTerm . '%');
+}
+$stm->execute();
 
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Notícias</title>
+    <title>Painel Administrativo</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="website icon" href="img/logoinfonews.jpg" type="png">
-    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/stylepainel.css">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-            padding-top: 70px;
-            margin: 0;
-        }
-
-        .navbar {
+        #painel {
             background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .navbar-brand {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .navbar-nav .nav-link {
-            color: white;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            transform: scale(1.05);
-        }
-
-        .navbar-toggler {
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .btn-sm {
-            font-size: 0.875rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 30px;
-            background-color: #007bff;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .btn-sm:hover {
-            background-color: #0056b3;
-            transform: scale(1.1);
-        }
-
-
-
-        @keyframes gradiente-animado {
-            0% {
-                background-position-x: 0%;
-            }
-
-            100% {
-                background-position-x: 100%;
-            }
-        }
-
-        .news-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            padding: 0 20px;
-            margin-bottom: 50px;
-        }
-
-        .news-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s ease-in-out;
-            transform: translateY(0);
-        }
-
-        .news-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .news-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-bottom: 3px solid #007bff;
-        }
-
-        .news-card .card-body {
-            padding: 20px;
-            flex: 1;
-        }
-
-        .news-card .card-footer {
-            padding: 10px 20px;
-            background: #f7f7f7;
-            border-top: 1px solid #e0e0e0;
-            text-align: center;
-        }
-
-        .news-card .btn {
-            display: block;
-            margin: 10px auto 0;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
-            border-radius: 30px;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-
-        .news-card .btn-comentario {
-            display: block;
-            margin: 10px auto 0;
-            padding: 10px 20px;
-            background-color: #fff;
-            color: white;
-            border-radius: 10px;
-            color: #007bff;
-            border: 1px solid #007bff;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-
-        .news-card .btn:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-
-        .message-container {
-            text-align: center;
-            background-color: rgba(255, 255, 0, 0.4);
-            padding: 10px;
-            border-radius: 8px;
-            width: 100%;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .login-link {
-            color: #000;
-            text-decoration: none;
-        }
-
-        <?php
-        $sqlNoticia = 'SELECT not_imagem FROM noticias ORDER BY not_publicado_em DESC LIMIT 1';
-        $stmNoticia = $conexao->prepare($sqlNoticia);
-        $stmNoticia->execute();
-        $noticia = $stmNoticia->fetch(PDO::FETCH_OBJ);
-        ?>@keyframes slideInLeft {
-            from {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes borderAnimation {
-            0% {
-                clip-path: inset(0 100% 100% 0);
-            }
-
-            25% {
-                clip-path: inset(0 0 100% 0);
-            }
-
-            50% {
-                clip-path: inset(0 0 0 100%);
-            }
-
-            75% {
-                clip-path: inset(100% 0 0 0);
-            }
-
-            100% {
-                clip-path: inset(0 0 0 0);
-            }
-        }
-
-        .last-news {
-            position: relative;
-            background-image: url('<?= $noticia->not_imagem ?>');
-            background-size: cover;
-            background-position: center;
-            height: 730px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: left;
-            text-transform: uppercase;
-            transition: all 0.3s ease-in-out;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            animation: slideInLeft 0.8s ease-out;
-            overflow: hidden;
-            margin: 65px 70px 0 70px;
-        }
-
-        .last-news::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .last-news::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border: 3px solid transparent;
-            border-radius: 15px;
-            animation: none;
-        }
-
-        .last-news:hover::after {
-            border-color: white;
-            animation: borderAnimation 1.5s linear forwards;
-        }
-
-        .last-news:hover {
-            transform: scale(1.05);
-        }
-
-        .last-news:hover::before {
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        .last-news h1 {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            z-index: 1;
-            transition: transform 0.3s ease, color 0.3s ease;
-            margin: 0;
-            position: relative;
-        }
-
-        .last-news h1::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: -5px;
-            width: 0;
-            height: 2px;
-            background-color: white;
-            transition: width 0.7s ease-out;
-        }
-
-        .last-news:hover h1 {
-            transform: translateY(-10px);
-        }
-
-        .last-news:hover h1::after {
-            width: 100%;
-        }
-
-        .last-news h2 {
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
-        }
-
-        .last-published {
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .square-news {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            padding: 0 20px;
-            animation: slideInRight 0.8s ease-out;
-        }
-
-        .news-card {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .news-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .news-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .news-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .card-body {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            position: relative;
-        }
-
-        .card-title {
-            font-size: 1.35rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s ease-in-out;
-        }
-
-        .news-card:hover .card-title {
-            color: #007bff;
-        }
-
-        .card-text {
-            font-size: 1rem;
-            color: #666;
+            padding: 40px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
 
-        .card-text:hover {
-            color: #007bff;
-        }
-
-        .news-card .btn-primary {
+        #painel h1 {
             color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease-in-out;
-            text-align: center;
-            display: inline-block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        .news-card .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .news-card .click-to-more {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            font-weight: bold;
-            text-transform: uppercase;
-            color: white;
-            font-size: 0.9rem;
-            padding: 8px 15px;
-            border-radius: 5px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease-in-out;
-            cursor: pointer;
-        }
-
-        .news-card .click-to-more:hover {
-            background-color: #0056b3;
-        }
-
-
-        @media (max-width: 768px) {
-            .news-card {
-                width: 320px;
-            }
-
-            .square-news {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .last-news {
-                height: 400px;
-                font-size: 16px;
-                margin: 30px 15px 0 15px;
-            }
-
-            .news-card img {
-                height: 180px;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            .card-title {
-                font-size: 1.2rem;
-            }
-        }
-
-
-        .btn-login {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border: none;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: all 0.8s linear;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-login i {
-            margin-right: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-login:hover {
-            background: linear-gradient(45deg, red, #1C75FF);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-login:hover i {
-            transform: translateX(5px);
-        }
-
-        .btn-logout {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-            background-color: red;
-            border: none;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: all 0.8s linear;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-logout i {
-            margin-right: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-logout:hover {
-            background: linear-gradient(45deg, red, #1C75FF);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-logout:hover i {
-            transform: translateX(5px);
-        }
-
-        .btn-controle {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(45deg, #28A745, #218838);
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-controle i {
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-controle:hover {
-            background: linear-gradient(45deg, #218838, #1E7E34);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-controle:hover i {
-            transform: rotate(20deg);
-        }
-
-        .btn-home {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(45deg, #0056b3, #1C75FF);
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-home i {
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-home:hover {
-            background: linear-gradient(45deg, #0056b3, #1C75FF);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            color: #f8f9fa;
-        }
-
-        .btn-home:hover i {
-            transform: scale(1.2);
-        }
-
-        .btn-account {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1.2rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            background: linear-gradient(45deg, #0056b3, #1C75FF);
-
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-account i {
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-account:hover {
-            background: linear-gradient(45deg, #003580, #0056b3);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            color: #f8f9fa;
-        }
-
-        .btn-account:hover i {
-            transform: scale(1.2);
-        }
-
-        .btn-account:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        }
-
-        .nav-item {
-            margin: 5px;
-        }
-
-        .titulo-noticias {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 2.5rem;
-            color: #333;
             font-weight: 600;
-            margin-bottom: 20px;
-            margin-top: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
+            margin-bottom: 15px;
             text-align: center;
+            font-family: 'Arial', sans-serif;
         }
 
-        .titulo-noticias::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 4px;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            border-radius: 2px;
-        }
-
-        .titulo-noticias {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            position: fixed;
-            right: 0;
-            top: 0;
-            padding-top: 1rem;
-            transition: transform 0.3s ease-in-out;
-            z-index: 1000;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .sidebar.hidden {
-            transform: translateX(100%);
-        }
-
-        .sidebar a {
+        #painel p {
             color: white;
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            margin: 10px;
-            text-decoration: none;
-            transition: 0.3s;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-        }
-
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .sidebar i {
-            font-size: 1.4rem;
-            margin-right: 15px;
-        }
-
-        .main-content {
-            margin-right: 250px;
-            padding: 20px;
-            transition: margin-right 0.3s;
-            width: 100%;
-        }
-
-        .sidebar.hidden+.main-content {
-            margin-right: 0;
+            font-size: 1.2rem;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
         }
 
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(100%);
+            .container-fluid {
+                padding: 30px 15px;
             }
 
-            .sidebar.active {
-                transform: translateX(0);
+            .container-fluid h1 {
+                font-size: 2rem;
             }
 
-            .main-content {
-                margin-right: 0;
+            .container-fluid p {
+                font-size: 1rem;
             }
         }
 
-        #topBar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: linear-gradient(135deg, #4b2a9b, #6933d1, #a02ae1);
-            color: white;
-            padding: 12px 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: space-;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            justify-content: space-between;
-            z-index: 1000;
-        }
+        @media (max-width: 480px) {
+            .container-fluid {
+                padding: 25px 10px;
+            }
 
-        #topBar h3 {
-            margin: 0;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+            .container-fluid h1 {
+                font-size: 1.8rem;
+            }
 
-        .toggle-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-
-        .toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .toggle-btn i {
-            transition: transform 0.3s ease, content 0.3s ease;
-        }
-
-        .toggle-btn:hover i::before {
-            content: "\F12F";
-            font-family: "bootstrap-icons";
-        }
-
-        .close-sidebar:hover i::before {
-            content: "\F138";
-            font-family: "bootstrap-icons";
+            .container-fluid p {
+                font-size: 0.9rem;
+            }
         }
     </style>
-
 </head>
 
 <body>
-    <div class="container-fluid" id="topBar">
-        <h3>
-            <i class="bi bi-envelope"></i>
-            INFONEWS
-        </h3>
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <i class="bi bi-list"></i>
-        </button>
-    </div>
+    <?php include 'header.php'; ?>
 
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-7">
-                <?php
-                $sqlUltimaNoticia = 'SELECT * FROM noticias ORDER BY not_publicado_em DESC LIMIT 1';
-                $stmUltimaNoticia = $conexao->prepare($sqlUltimaNoticia);
-                $stmUltimaNoticia->execute();
-                $ultimaNoticia = $stmUltimaNoticia->fetch(PDO::FETCH_OBJ);
-                $ultimaNoticiaCodigo = $ultimaNoticia->not_codigo;
-                ?>
-                <a href="detalhesnoticias.php?id=<?= $ultimaNoticia->not_codigo ?>" style="text-decoration:none;">
-                    <div class="last-news">
+        <div class="container-fluid mt-1" id="painel">
+            <h1 class="mb-3">Painel Administrativo <i class="bi bi-gear"></i>
+            </h1>
+            <p class="lead">Tenha controle total nas notícias, anúncios e usuários! <i class="bi bi-emoji-smile"></i>
+            </p>
+        </div>
 
-                        <h1><?= $ultimaNoticia->not_titulo ?></h1>
+        <div class="search-bar">
+            <form action="" method="POST" class="d-flex justify-content-center">
+                <input type="text" name="search" class="form-control w-50" placeholder="Buscar Notícias, Anúncios ou Usuários" value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="btn btn-primary ms-2 mr-3"><i class='bi-search'></i></button>
 
-                        <div class="last-published">
-                            <i class="fa-solid fa-envelope-open"> </i>
-                            Última notícia publicada!
+                <a href="index.php" class="btn btn-secondary ms-2">Home <i class='bi-house'></i></a>
+            </form>
+        </div>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Notícias</h3>
+                            <a href="addnoticia.php" class="btn btn-success btn-lg d-block mb-3">
+                                <i class="bi bi-file-earmark-plus me-2"></i>Adicionar Notícia
+                            </a>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Título</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (count($noticias) > 0): ?>
+                                            <?php foreach ($noticias as $noticia): ?>
+                                                <tr>
+                                                    <td><?= $noticia['not_codigo'] ?></td>
+                                                    <td>
+                                                        <?= htmlspecialchars(strlen($noticia['not_titulo']) > 50 ? substr($noticia['not_titulo'], 0, 50) . '...' : $noticia['not_titulo']) ?>
+                                                    </td>
+
+                                                    <td class="row-12 d-flex justify-content-between">
+                                                        <a href="editarnoticia.php?id=<?= $noticia['not_codigo']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                        <form action="actionnoticia.php" method="POST" style="display: inline-block;">
+                                                            <input type="hidden" name="acao" value="excluir">
+                                                            <input type="hidden" name="id" value="<?= $noticia['not_codigo']; ?>">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir esta notícia?')">Excluir</button>
+                                                        </form>
+                                                    </td>
+
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center">Nenhuma notícia encontrada.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="btn text-light mt-4 text-center bg-success">Quantidade de notícias cadastradas <b><?= count($noticias) ?></b></p>
                         </div>
                     </div>
-                </a>
-            </div>
-
-            <div class="col-md-5 mt-5">
-                <div class="square-news m-5 mt-4">
-                    <?php
-                    $sql = 'SELECT * FROM noticias WHERE not_codigo != :not_codigo ORDER BY not_publicado_em DESC LIMIT 2';
-                    $stm = $conexao->prepare($sql);
-                    $stm->bindParam(':not_codigo', $ultimaNoticiaCodigo, PDO::PARAM_INT);
-                    $stm->execute();
-                    $someNews = $stm->fetchAll(PDO::FETCH_OBJ);
-                    ?>
-                    <?php foreach ($someNews as $news) : ?>
-                        <a href="detalhesnoticias.php?id=<?= $news->not_codigo ?>" style="text-decoration:none;">
-                            <div class="news-card">
-                                <div class="news-card-image" style="background-image: url('<?= $news->not_imagem ?>');
-                                background-size: cover;
-                                background-position: center;
-                                height: 220px;
-                                border-top-left-radius: 15px;
-                                border-top-right-radius: 15px;
-                                border-bottom: 1px solid #007bff;
-                                transition: transform 0.3s ease-in-out;">
-                                    <?php
-                                    if ($news->not_categoria == NULL) : ?>
-                                        <div class="click-to-more">
-                                            <i class="fa-solid fa-circle-info"> </i>
-                                            Clique para mais
-                                        </div>
-                                    <?php else : ?>
-                                        <div class="click-to-more">
-                                            <i class="fa-solid fa-circle-info"> </i>
-                                            <?= $news->not_categoria ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= htmlspecialchars($news->not_titulo) ?></h5>
-                                </div>
-                            </div>
-                        </a>
-
-                    <?php endforeach; ?>
                 </div>
-            </div>
-        </div>
-    </div>
-    <h2 class="titulo-noticias">Previsão do tempo:</h2>
-    <?php include "clima-atual.html"; ?>
-    <?php include "carrossel_anuncios.php"; ?>
-    
-    <div class="container mt-5">
-        <h2 class="titulo-noticias">Últimas notícias:</h2>
-        <div class="news-container">
-            <?php foreach ($noticias as $noticia) : ?>
-                <div class="news-card">
-                    <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" style="text-decoration:none;">
-                        <img src="<?= $noticia->not_imagem ?>" alt="<?= $noticia->not_titulo ?>">
+                <div class="col-lg-6">
+                    <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($noticia->not_titulo) ?></h5>
-                            <p class="card-text"><?= substr(htmlspecialchars($noticia->not_conteudo), 0, 100) ?>...</p>
-                            <a href="detalhesnoticias.php?id=<?= $noticia->not_codigo ?>" class="btn btn-primary">Leia Mais</a>
-                        </div>
-                        <div class="card-footer">
-                            <small> Publicado em <?= date('d/m/Y', strtotime($noticia->not_publicado_em)) . " às " . date('H:i', strtotime($noticia->not_publicado_em)) ?> | Por InfoNews</small>
-                        </div>
+                            <h3 class="card-title text-center mb-4">Anúncios</h3>
+                            <a href="addanuncio.php" class="btn btn-success btn-lg d-block mb-3">
+                                <i class="bi bi-file-earmark-plus me-2"></i>Adicionar anúncio
+                            </a>
 
-                        <div class="card-footer mt-3">
-                            <?php if ($_SESSION['logado099']) : ?>
-                                <button class="btn-comentario btn-success" data-bs-toggle="collapse" data-bs-target="#comentarios<?= $noticia->not_codigo ?>">Comentar</button>
-                                <div class="collapse" id="comentarios<?= $noticia->not_codigo ?>">
-                                    <form action="actioncomentario.php" method="POST">
-                                        <input type="hidden" name="acao" value="incluir">
-                                        <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
-                                        <textarea class="form-control mt-2" name="conteudo" rows="3" placeholder="Escreva seu comentário..."></textarea>
-                                        <button type="submit" class="btn btn-success mt-2"><i class='bi-send'> </i>Enviar</button>
-                                    </form>
-                                </div>
-                            <?php else : ?>
-                                <div class="message-container">
-                                    <a href="login.php" class="login-link"><i class="bi bi-box-arrow-in-right icon"></i> <b>Faça login</b> para comentar.</a>
-                                </div>
-                            <?php endif; ?>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nome</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (count($anuncios) > 0): ?>
+                                            <?php foreach ($anuncios as $anuncio): ?>
+                                                <tr>
+                                                    <td><?= $anuncio->anu_codigo ?></td>
+                                                    <td><?= htmlspecialchars($anuncio->anu_nome) ?></td>
+                                                    <td>
+                                                        <a href="editaranuncio.php?id=<?= $anuncio->anu_codigo; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                                        <form action="actionanuncio.php" method="POST" style="display: inline-block;">
+                                                            <input type="hidden" name="acao" value="excluir">
+                                                            <input type="hidden" name="id" value="<?= $anuncio->anu_codigo; ?>">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este anúncio?')">Excluir</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center">Nenhum anúncio encontrado.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="btn text-light mt-4 text-center bg-success">Quantidade de anúncios cadastrados <b><?= count($anuncios) ?></b></p>
                         </div>
-                    </a>
+                    </div>
+                </div>  
+                <?php include "carrossel_anuncios.php"; ?>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Administradores</h3>
+                            <a href="registeradm.php" class="btn btn-success btn-lg d-block mb-3">
+                                <i class="bi bi-person-plus-fill me-2"></i>Novo Administrador
+                            </a>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nome</th>
+                                            <th>Email</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (count($usuariosAdmin) > 0): ?>
+                                            <?php foreach ($usuariosAdmin as $usuario): ?>
+                                                <tr>
+                                                    <td><?= $usuario['usu_codigo'] ?></td>
+                                                    <td><?= htmlspecialchars($usuario['usu_nome']) ?></td>
+                                                    <td><?= htmlspecialchars($usuario['usu_email']) ?></td>
+                                                    <td>
+                                                        <?php if ($_SESSION['logado099'] && $_SESSION['id'] == $usuario["usu_codigo"]) : ?>
+                                                            <div class="d-flex">
+                                                                <a href="editarusuario.php?id=<?= $usuario['usu_codigo']; ?>" class="btn btn-warning btn-sm me-2">Editar</a>
+                                                                <form action="actionusuario.php" method="POST" class="d-inline">
+                                                                    <input type="hidden" name="acao" value="excluir">
+                                                                    <input type="hidden" name="id" value="<?= $usuario['usu_codigo']; ?>">
+                                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este administrador?')">Excluir</button>
+                                                                </form>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </td>
+
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center">Nenhum administrador encontrado.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="btn text-light mt-4 text-center bg-success">Quantidade de administradores cadastrados <b><?= count($usuariosAdmin) ?></b></p>
+                        </div>
+                    </div>
                 </div>
-            <?php endforeach; ?>
+                <div class="col-lg-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Usuários</h3>
+                            <a href="register.php" class="btn btn-success btn-lg d-block mb-3">
+                                <i class="bi bi-person-plus me-2"></i>Adicionar Usuário
+                            </a>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nome</th>
+                                            <th>Email</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (count($usuarios) > 0): ?>
+                                            <?php foreach ($usuarios as $usuario): ?>
+                                                <tr>
+                                                    <td><?= $usuario['usu_codigo'] ?></td>
+                                                    <td><?= htmlspecialchars($usuario['usu_nome']) ?></td>
+                                                    <td><?= htmlspecialchars($usuario['usu_email']) ?></td>
+                                                    <td>
+                                                        <?php #if (isset($_SESSION['logado099']) && $_SESSION['logado099'] && isset($_SESSION['id']) && $_SESSION['id'] == $usuario["usu_codigo"]) : 
+                                                        ?>
+                                                        <div class="d-flex">
+                                                            <a href="editarusuario.php?id=<?= $usuario['usu_codigo']; ?>" class="btn btn-warning btn-sm me-2">Editar</a>
+                                                            <form action="actionusuario.php" method="POST" class="d-inline">
+                                                                <input type="hidden" name="acao" value="excluir">
+                                                                <input type="hidden" name="id" value="<?= $usuario['usu_codigo']; ?>">
+                                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</button>
+                                                            </form>
+                                                        </div>
+                                                        <?php #endif; 
+                                                        ?>
+                                                    </td>
+
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center">Nenhum usuário encontrado.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="btn text-light mt-4 text-center bg-success">Quantidade de usuários cadastrados
+                                <b><?= count($usuarios) ?></b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+    <?php include 'footer.php'; ?>
 
-    <footer>
-        <div class="footer-header">
-            <h2>Quer se tornar nosso parceiro?</h2>
-            <p>Se você está interessado em parcerias e gostaria de saber mais, um de nossos consultores está pronto para ajudar.</p>
-            <a href="quemsomos.php" style="text-decoration:none;"><button>Saiba mais</button></a>
-        </div>
-
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>Parcerias</h3>
-                <ul>
-                    <li><a href="#">Sites</a></li>
-                    <li><a href="#">Redes Sociais</a></li>
-                    <li><a href="#">Branding</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Sobre</h3>
-                <ul>
-                    <li><a href="#">Nossa Missão</a></li>
-                    <li><a href="#">Nossos Trabalhos</a></li>
-                    <li><a href="#">Carreiras</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Suporte</h3>
-                <ul>
-                    <li><a href="perfil.php?openModal=true&tab=screen2">Políticas e Diretrizes</a></li>
-                    <li><a href="#">Solicitação de Suporte</a></li>
-                    <li><a href="#">Contato</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3>Siga-nos</h3>
-                <ul>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Twitter</a></li>
-                </ul>
-            </div>
-
-            <div class="logo-infonews justify-content-center">
-                <img src="img/logoinfonews.jpg" alt="Logo InfoNews" width="150" height="150">
-                <img src="img/giacomellidevslogo.png" alt="" height="150" width="150" width="150">
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2025 InfoNews Ltda. Todos os direitos reservados.</p>
-            <a href="#" style="color: #a8a8ff; text-decoration: none;">Política de Privacidade</a>
-        </div>
-    </footer>
-    <div class="sidebar hidden" id="sidebar">
-        <a href="javascript:void(0)" onclick="toggleSidebar()" class="close-sidebar">
-            <i class="bi bi-x-lg"></i> Fechar
-        </a>
-        <hr style="color: white;">
-        <a href="index.php" class="btn-home mt-3"><i class="bi bi-house-door"></i> Home</a>
-        <?php if ($_SESSION['nivel'] === "admin") : ?>
-            <a href="indexnoticia.php" class="btn-controle"><i class="bi bi-tools"></i> Controle</a>
-        <?php endif; ?>
-        <?php if ($_SESSION['logado099']) : ?>
-            <a href="perfil.php" class="btn-account"><i class="bi bi-person"></i> Conta</a>
-            <a href="logout.php" class="btn-logout"><i class="bi bi-box-arrow-right"></i> Sair</a>
-        <?php else : ?>
-            <a href="login.php" class="btn-login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
-        <?php endif; ?>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function toggleSidebar() {
-            document.getElementById("sidebar").classList.toggle("hidden");
-            document.getElementById("sidebar").classList.toggle("active");
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

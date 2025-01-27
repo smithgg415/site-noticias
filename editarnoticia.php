@@ -9,6 +9,7 @@ if (!isset($_SESSION["logado099"]) || $_SESSION['nivel'] !== 'admin') {
 require 'bd/conexao.php';
 $conexao = conexao::getInstance();
 
+// Obter o ID da notícia
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
@@ -35,6 +36,7 @@ if ($id > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Notícia</title>
+    <!-- Bootstrap CSS -->
     <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="website icon" type="png" href="img/logoinfonews.jpg">
@@ -156,6 +158,7 @@ if ($id > 0) {
         </div>
     </div>
     <?php include 'footer.php'; ?>
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

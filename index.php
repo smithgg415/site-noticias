@@ -823,6 +823,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
                             <i class="fa-solid fa-envelope-open"> </i>
                             Última notícia publicada!
                         </div>
+
                     </div>
                 </a>
             </div>
@@ -874,7 +875,7 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
     <h2 class="titulo-noticias">Previsão do tempo:</h2>
     <?php include "clima-atual.html"; ?>
     <?php include "carrossel_anuncios.php"; ?>
-    
+
     <div class="container mt-5">
         <h2 class="titulo-noticias">Últimas notícias:</h2>
         <div class="news-container">
@@ -893,15 +894,26 @@ $anuncios = $stm->fetchAll(PDO::FETCH_OBJ);
 
                         <div class="card-footer mt-3">
                             <?php if ($_SESSION['logado099']) : ?>
-                                <button class="btn-comentario btn-success" data-bs-toggle="collapse" data-bs-target="#comentarios<?= $noticia->not_codigo ?>">Comentar</button>
+                                <button class="btn-comentario btn-success"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#comentarios<?= $noticia->not_codigo ?>"
+                                    aria-expanded="false"
+                                    aria-controls="comentarios<?= $noticia->not_codigo ?>">
+                                    Comentar
+                                </button>
+
                                 <div class="collapse" id="comentarios<?= $noticia->not_codigo ?>">
                                     <form action="actioncomentario.php" method="POST">
                                         <input type="hidden" name="acao" value="incluir">
                                         <input type="hidden" name="not_codigo" value="<?= $noticia->not_codigo ?>">
                                         <textarea class="form-control mt-2" name="conteudo" rows="3" placeholder="Escreva seu comentário..."></textarea>
-                                        <button type="submit" class="btn btn-success mt-2"><i class='bi-send'> </i>Enviar</button>
+                                        <button type="submit" class="btn btn-success mt-2">
+                                            <i class="bi-send"></i> Enviar
+                                        </button>
                                     </form>
                                 </div>
+
+
                             <?php else : ?>
                                 <div class="message-container">
                                     <a href="login.php" class="login-link"><i class="bi bi-box-arrow-in-right icon"></i> <b>Faça login</b> para comentar.</a>

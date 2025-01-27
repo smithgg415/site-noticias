@@ -887,7 +887,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
                     <p class="information mb-2" id="usu_email"><?= htmlspecialchars($usuario->usu_email) ?>
                         <i class="bi bi-envelope-fill me-2"></i>
                     </p>
-                    <p class="information" id="usu_nivel"> Seu nível aqui no InfoNews é <?= htmlspecialchars($usuario->usu_nivel) ?>
+                    <p class="information" id="usu_nivel"> Seu nível aqui no InfoNews é <?php if ($usuario->usu_nivel == "admin") { echo "Administrador";}else {echo "Usuário";}?>
                         <?php if ($usuario->usu_nivel == 'admin') : ?>
                             <i class="bi bi-award-fill me-2" style="color:#FFD700;background-color:black;
                         padding:5px;border-radius:10px; box-shadow: 0 0 0.6em black;"></i>
@@ -1196,7 +1196,7 @@ $atividades = $stmtAtividades->fetchAll(PDO::FETCH_OBJ);
         cameraIcon.addEventListener('click', function() {
             uploadModal.show();
         });
-        const cameraIconBackground = document.querySelector('.camera-icon-background');
+        const cameraIconBackground = document.querySelector('.camera-icon-background'); // Usando a classe correta
         const uploadModalBackground = new bootstrap.Modal(document.getElementById('uploadModalBackground'));
         cameraIconBackground.addEventListener('click', function() {
             uploadModalBackground.show();

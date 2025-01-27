@@ -1,5 +1,5 @@
 <?php
-require 'bd/conexao.php'; 
+require 'bd/conexao.php'; // Arquivo de conexão com o banco
 
 if (!isset($_GET['id'])) {
     die("Usuário não especificado.");

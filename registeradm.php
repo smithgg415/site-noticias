@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!$_SESSION['logado099'] && $_SESSION['nivel'] != 'admin'){
+if (!$_SESSION['logado099'] && $_SESSION['nivel'] != 'admin') {
     header("Location: index.php");
     exit;
 }
@@ -8,10 +8,12 @@ if(!$_SESSION['logado099'] && $_SESSION['nivel'] != 'admin'){
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Usuário</title>
+    <!-- Bootstrap CSS -->
     <link rel="website icon" type="png" href="img/logoinfonews.jpg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -59,6 +61,7 @@ if(!$_SESSION['logado099'] && $_SESSION['nivel'] != 'admin'){
         }
     </style>
 </head>
+
 <body>
     <div class="register-card">
         <h1>Registrar Administrador</h1>
@@ -83,4 +86,5 @@ if(!$_SESSION['logado099'] && $_SESSION['nivel'] != 'admin'){
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ações de Comentários</title>
+    <!-- Link CSS Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" href="css/custom.css">
 </head>
@@ -14,8 +15,10 @@
     session_start();
     require 'bd/conexao.php';
 
+    // Conexão com o banco de dados
     $conexao = conexao::getInstance();
 
+    // Recupera os dados enviados via POST
     $acao = filter_input(INPUT_POST, 'acao', FILTER_SANITIZE_STRING);
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $conteudo = trim(filter_input(INPUT_POST, 'conteudo', FILTER_SANITIZE_STRING));

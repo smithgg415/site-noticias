@@ -8,6 +8,7 @@ $usu_codigo = $_POST['id'] ?? '';
 $usu_foto = $_POST['usu_foto'] ?? '';
 $foto_de_fundo = $_POST['foto_de_fundo'] ?? '';
 
+// Mensagens de erro
 $mensagem = '';
 if (!in_array($acao, ['excluir-foto', 'editar-foto', 'excluir-foto-de-fundo', 'editar-foto-de-fundo'])) {
     $mensagem .= '<li>Ação inválida.</li>';

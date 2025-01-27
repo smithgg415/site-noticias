@@ -234,6 +234,7 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
             transition: all 0.3s ease;
         }
 
+        /* Cor de fundo para os ícones */
         .share-button.facebook {
             background-color: #3b5998;
         }
@@ -246,6 +247,7 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
             background-color: #25d366;
         }
 
+        /* Efeito de hover */
         .share-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
@@ -330,10 +332,10 @@ $preview = mb_substr(strip_tags($conteudo), 0, $maxLength) . '...';
     <?php include 'header.php'; ?>
     <div class="container mt-4">
         <div class="row mb-4">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <img src="<?= htmlspecialchars($noticia->not_imagem) ?>" alt="<?= htmlspecialchars($noticia->not_titulo) ?>" class="img-fluid noticia-img">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <div class="card shadow-sm border-light mb-4">
                     <div class="card-body">
                         <h1 class="display-4 display-sm-5 display-xs-6 font-weight-bold text-dark"><?= htmlspecialchars($noticia->not_titulo) ?></h1>

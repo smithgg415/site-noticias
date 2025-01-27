@@ -9,7 +9,6 @@ if (!isset($_SESSION["logado099"]) || $_SESSION['nivel'] !== 'admin') {
 require 'bd/conexao.php';
 $conexao = conexao::getInstance();
 
-// Obter o ID do anúncio
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
